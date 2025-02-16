@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>음식 목록</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <h1>음식 목록</h1>
+    <hr />
+
+    <div class="foods-grid">
+      <h2>
+        <% foods.forEach(food => { %>
+        <div class="food-card">
+          <a href="/foods/<%= food._id %>" class="btn"><%= food.name %></a>
+        </div>
+        <% }); %>
+      </h2>
+    </div>
+
+    <hr />
+    <a href="/foods/create" class="btn">새 음식 추가</a>
+  </body>
+</html>
