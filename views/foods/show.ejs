@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
   <body>
+    <% if (locals.error) { %>
+    <div class="error"><%= error %></div>
+    <% } %>
+
     <div class="food-detail">
       <h1><%= food.name %></h1>
       <p class="description"><b>설명</b> : <%= food.description %></p>
@@ -14,7 +18,7 @@
       <div class="actions">
         <a href="/foods" class="btn">목록으로 돌아가기</a><br />
         <a href="/foods/<%= food._id %>/edit" class="btn">수정</a><br />
-        <form action="/foods/<%= food._id %>/delete" method="DELETE">
+        <form action="/foods/<%= food._id %>/?_method=DELETE" method="POST">
           <button type="submit" class="btn btn-danger">삭제</button>
         </form>
       </div>
