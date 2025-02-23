@@ -1,13 +1,13 @@
-require("dotenv").config();
-
-const MONGO_URI = process.env.MONGO_URI;
-const PORT = process.env.PORT || 3000;
-
-const app = express();
 const express = require("express");
-const mongoose = require("mongoose");
+const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
 const methodOverride = require("method-override");
+
+const app = express();
+const { PORT } = require("./config/config");
+
+// DB Connecting
+require("./config/db.js");
 
 // middleware
 app.use(express.json());
@@ -18,28 +18,14 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// routing
-const index = require("./routes/index.routes.js");
-const userRouter = require("./routes/users.routes.js");
-const foodRouter = require("./routes/foods.routes.js");
-const groupRouter = require("./routes/groups.routes.js");
+app.use(expressLayouts);
+app.set("layout", "layout");
 
-app.use("/", index);
-app.use("/users", userRouter);
-app.use("/foods", foodRouter);
-app.use("/groups", groupRouter);
+// Routing
+const indexRouter = require("./routes/index.routes.js");
+app.use(indexRouter);
 
-// DataBase
-const { userModel } = require("./models/user.model.js");
-const groupModel = require("./models/group.model.js");
-const foodModel = require("./models/food.model.js");
-
-// Connection
-mongoose
-  .connect(MONGO_URI)
-  .then(() => console.log(">> DataBase Connection Complete <<"))
-  .catch((err) => console.error("Connection Failed: ", err));
-
+// Listening
 app.listen(PORT, () => {
   console.log(`Example app listening on port: ${PORT}`);
 });

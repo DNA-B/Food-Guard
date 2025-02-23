@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>음식 수정</title>
+    <link rel="stylesheet" href="/stylesheet/foods.css" />
+  </head>
+  <body>
+    <h1>음식 수정</h1>
+
+    <% if (locals.error) { %>
+    <div class="error"><%= error %></div>
+    <% } %>
+
+    <form
+      action="/foods/<%= food._id %>/edit/?_method=PUT"
+      method="POST"
+      class="food-form"
+    >
+      <div>
+        <label for="name">이름:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value="<%= food.name %>"
+          required
+        />
+      </div>
+
+      <div>
+        <label for="description">설명:</label>
+        <textarea id="description" name="description">
+<%= food.description %></textarea
+        >
+      </div>
+
+      <div>
+        <label for="expiryDate">유통기한:</label>
+        <input
+          type="date"
+          id="expiryDate"
+          name="expiryDate"
+          value="<%= food.expiryDate.toISOString().split('T')[0] %>"
+        />
+      </div>
+
+      <button type="submit" class="btn">수정하기</button>
+      <a href="/foods" class="btn">취소</a>
+    </form>
+  </body>
+</html>

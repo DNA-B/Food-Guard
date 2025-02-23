@@ -1,4 +1,5 @@
 const express = require("express");
+
 const router = express.Router();
 const Food = require("../models/food.model.js");
 
@@ -47,9 +48,45 @@ router.get("/create", (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const food = await Food.findById(req.params.id);
+    console.log("food: ", food);
 
     if (food) {
       res.render("foods/show", { food: food });
+    } else {
+      res.render("error", { message: "음식을 찾을 수 없습니다" });
+    }
+  } catch (error) {
+    res.status(500).render("error", { message: error.message });
+  }
+});
+
+// find one food
+router.get("/:id/edit", async (req, res) => {
+  try {
+    const food = await Food.findById(req.params.id);
+    console.log("food: ", food);
+
+    if (food) {
+      res.render("foods/edit", { food: food });
+    } else {
+      res.render("error", { message: "음식을 찾을 수 없습니다" });
+    }
+  } catch (error) {
+    res.status(500).render("error", { message: error.message });
+  }
+});
+
+router.put("/:id/edit", async (req, res) => {
+  try {
+    const food = await Food.findById(req.params.id);
+    if (food) {
+      const newFood = {
+        name: req.body.name,
+        description: req.body.description,
+        expiryDate: req.body.expiryDate,
+      };
+      await food.updateOne(newFood);
+      res.redirect("/foods");
     } else {
       res.render("error", { message: "음식을 찾을 수 없습니다" });
     }
@@ -78,4 +115,5 @@ router.delete("/:id", async (req, res) => {
     });
   }
 });
+
 module.exports = router;
