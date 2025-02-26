@@ -24,7 +24,9 @@
       </nav>
     </header>
 
-    <%- body %>
+    <% if (locals.error) { %>
+    <div class="error"><%= error %></div>
+    <% } %> <%- body %>
 
     <footer class="main-footer">
       <p>&copy; 2025 - food guard. All rights reserved.</p>

@@ -10,10 +10,10 @@ router.get("/", async (req, res) => {
     if (foodList) {
       res.render("foods/index", { foodList: foodList });
     } else {
-      res.render("error", { message: "음식을 찾을 수 없습니다" });
+      res.render("error", { error: "음식을 찾을 수 없습니다" });
     }
   } catch (error) {
-    res.status(500).render("error", { message: error.message });
+    res.status(500).render("error", { error: error.message });
   }
 });
 
@@ -28,7 +28,7 @@ router.post("/create", async (req, res) => {
     });
 
     const savedFood = await food.save();
-    console.log("\n\nSaved food:", savedFood);
+    console.log("Saved food:", savedFood);
     res.redirect("/foods");
   } catch (error) {
     console.error("Error:", error);
@@ -53,10 +53,10 @@ router.get("/:id", async (req, res) => {
     if (food) {
       res.render("foods/show", { food: food });
     } else {
-      res.render("error", { message: "음식을 찾을 수 없습니다" });
+      res.render("error", { error: "음식을 찾을 수 없습니다" });
     }
   } catch (error) {
-    res.status(500).render("error", { message: error.message });
+    res.status(500).render("error", { error: error.message });
   }
 });
 
@@ -69,10 +69,10 @@ router.get("/:id/edit", async (req, res) => {
     if (food) {
       res.render("foods/edit", { food: food });
     } else {
-      res.render("error", { message: "음식을 찾을 수 없습니다" });
+      res.render("error", { error: "음식을 찾을 수 없습니다" });
     }
   } catch (error) {
-    res.status(500).render("error", { message: error.message });
+    res.status(500).render("error", { error: error.message });
   }
 });
 
@@ -88,10 +88,10 @@ router.put("/:id/edit", async (req, res) => {
       await food.updateOne(newFood);
       res.redirect("/foods");
     } else {
-      res.render("error", { message: "음식을 찾을 수 없습니다" });
+      res.render("error", { error: "음식을 찾을 수 없습니다" });
     }
   } catch (error) {
-    res.status(500).render("error", { message: error.message });
+    res.status(500).render("error", { error: error.message });
   }
 });
 
@@ -105,7 +105,7 @@ router.delete("/:id", async (req, res) => {
       console.log("Deleted Data: ", deletedFood);
       res.redirect("/foods");
     } else {
-      res.render("error", { message: "음식을 찾을 수 없습니다" });
+      res.render("error", { error: "음식을 찾을 수 없습니다" });
     }
   } catch (error) {
     console.error("Error:", error);

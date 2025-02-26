@@ -1,27 +1,14 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= food.name %></title>
-    <link rel="stylesheet" href="/stylesheet/foods.css" />
-  </head>
-  <body>
-    <% if (locals.error) { %>
-    <div class="error"><%= error %></div>
-    <% } %>
+<div class="food-detail">
+  <h1><%= food.name %></h1>
+  <p class="description"><b>설명</b> : <%= food.description %></p>
+  <p class="expiredDate"><b>유통기한</b> : <%= food.expiryDate %></p>
+  <hr />
 
-    <div class="food-detail">
-      <h1><%= food.name %></h1>
-      <p class="description"><b>설명</b> : <%= food.description %></p>
-      <p class="expiredDate"><b>유통기한</b> : <%= food.expiryDate %></p>
-      <hr />
-
-      <div class="actions">
-        <a href="/foods" class="btn">목록으로 돌아가기</a><br />
-        <a href="/foods/<%= food._id %>/edit" class="btn">수정</a><br />
-        <form action="/foods/<%= food._id %>/?_method=DELETE" method="POST">
-          <button type="submit" class="btn btn-danger">삭제</button>
-        </form>
-      </div>
-    </div>
-  </body>
-</html>
+  <div class="actions">
+    <a href="/foods" class="btn">목록으로 돌아가기</a><br />
+    <a href="/foods/<%= food._id %>/edit" class="btn">수정</a><br />
+    <form action="/foods/<%= food._id %>/?_method=DELETE" method="POST">
+      <button type="submit" class="btn btn-danger">삭제</button>
+    </form>
+  </div>
+</div>
