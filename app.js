@@ -6,6 +6,9 @@ const methodOverride = require("method-override");
 const app = express();
 const { PORT } = require("./config/config");
 
+const logger = require("./middleware/logger.js");
+const indexRouter = require("./routes/index.js");
+
 // DB Connecting
 require("./config/db.js");
 
@@ -22,7 +25,7 @@ app.use(expressLayouts);
 app.set("layout", "layout");
 
 // Routing
-const indexRouter = require("./routes/index.routes.js");
+app.use(logger); // 함수를 직접 사용
 app.use(indexRouter);
 
 // Listening

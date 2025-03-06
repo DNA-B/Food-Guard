@@ -1,12 +1,12 @@
 const express = require("express");
 
 const router = express.Router();
-const Food = require("../models/food.model.js");
+const foodController = require("../controllers/foodController.js");
 
 // find all food
 router.get("/", async (req, res) => {
   try {
-    const foodList = await Food.find();
+    const foodList = await foodController.findAllFood();
     if (foodList) {
       res.render("foods/index", { foodList: foodList });
     } else {
@@ -20,15 +20,8 @@ router.get("/", async (req, res) => {
 // food create
 router.post("/create", async (req, res) => {
   try {
-    console.log("Received form data: ", req.body);
-    const food = new Food({
-      name: req.body.name,
-      description: req.body.description,
-      expiryDate: req.body.expiryDate,
-    });
-
-    const savedFood = await food.save();
-    console.log("Saved food:", savedFood);
+    const { name, description, expiryDate } = req.body;
+    await foodController.createFood(name, description, expiryDate);
     res.redirect("/foods");
   } catch (error) {
     console.error("Error:", error);
@@ -47,8 +40,7 @@ router.get("/create", (req, res) => {
 // find one food
 router.get("/:id", async (req, res) => {
   try {
-    const food = await Food.findById(req.params.id);
-    console.log("food: ", food);
+    const food = await foodController.findOneFood(req.params.id);
 
     if (food) {
       res.render("foods/show", { food: food });
@@ -60,11 +52,10 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// find one food
+// edit food view
 router.get("/:id/edit", async (req, res) => {
   try {
-    const food = await Food.findById(req.params.id);
-    console.log("food: ", food);
+    const food = await foodController.findOneFood(req.params.id);
 
     if (food) {
       res.render("foods/edit", { food: food });
@@ -76,16 +67,19 @@ router.get("/:id/edit", async (req, res) => {
   }
 });
 
+// edit food
 router.put("/:id/edit", async (req, res) => {
   try {
-    const food = await Food.findById(req.params.id);
+    const food = await foodController.findOneFood(req.params.id);
+
     if (food) {
-      const newFood = {
-        name: req.body.name,
-        description: req.body.description,
-        expiryDate: req.body.expiryDate,
-      };
-      await food.updateOne(newFood);
+      const { name, description, expiryDate } = req.body;
+      await foodController.updateOneFood(
+        req.params.id,
+        name,
+        description,
+        expiryDate
+      );
       res.redirect("/foods");
     } else {
       res.render("error", { error: "음식을 찾을 수 없습니다" });
@@ -97,12 +91,10 @@ router.put("/:id/edit", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    console.log("Delete data [id - ", req.params, "]");
-    const food = await Food.findById(req.params.id);
+    const food = await foodController.findOneFood(req.params.id);
 
     if (food) {
-      const deletedFood = await Food.deleteOne(food);
-      console.log("Deleted Data: ", deletedFood);
+      await foodController.deleteOneFood(req.params.id);
       res.redirect("/foods");
     } else {
       res.render("error", { error: "음식을 찾을 수 없습니다" });

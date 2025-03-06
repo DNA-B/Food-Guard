@@ -10,9 +10,9 @@ router.get("/test", (req, res) => {
 });
 
 // routing
-const userRouter = require("./users.routes.js");
-const foodRouter = require("./foods.routes.js");
-const groupRouter = require("./groups.routes.js");
+const userRouter = require("./userRoutes.js");
+const foodRouter = require("./foodRoutes.js");
+const groupRouter = require("./groupRoutes.js");
 
 router.use("/users", userRouter);
 router.use("/foods", foodRouter);
