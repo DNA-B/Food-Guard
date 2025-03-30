@@ -16,6 +16,10 @@ const foodSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  userId: {
+    type: String,
+    require: true,
+  },
 });
 
 const Food = mongoose.model("Food", foodSchema);

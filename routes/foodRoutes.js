@@ -21,7 +21,8 @@ router.get("/", async (req, res) => {
 router.post("/create", async (req, res) => {
   try {
     const { name, description, expiryDate } = req.body;
-    await foodController.createFood(name, description, expiryDate);
+    const userId = req.cookies.id;
+    await foodController.createFood(name, description, expiryDate, userId);
     res.redirect("/foods");
   } catch (error) {
     console.error("Error:", error);

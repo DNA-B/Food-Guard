@@ -1,10 +1,11 @@
 const Food = require("../models/foodModel");
 
-const createFood = async (name, description, expiryDate) => {
+const createFood = async (name, description, expiryDate, userId) => {
   const newFood = new Food({
     name: name,
     description: description,
     expiryDate: expiryDate,
+    userId: userId,
   });
 
   const savedFood = await newFood.save();
