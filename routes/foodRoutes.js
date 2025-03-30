@@ -1,12 +1,13 @@
 const express = require("express");
-
 const router = express.Router();
 const foodController = require("../controllers/foodController.js");
 
 // find all food
 router.get("/", async (req, res) => {
   try {
-    const foodList = await foodController.findAllFood();
+    const userId = req.userId;
+    console.log(userId);
+    const foodList = await foodController.findAllFood(userId);
     if (foodList) {
       res.render("foods/index", { foodList: foodList });
     } else {
@@ -21,7 +22,7 @@ router.get("/", async (req, res) => {
 router.post("/create", async (req, res) => {
   try {
     const { name, description, expiryDate } = req.body;
-    const userId = req.cookies.id;
+    const userId = req.userId;
     await foodController.createFood(name, description, expiryDate, userId);
     res.redirect("/foods");
   } catch (error) {

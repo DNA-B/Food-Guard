@@ -12,8 +12,8 @@ const createFood = async (name, description, expiryDate, userId) => {
   console.log("Saved food:", savedFood);
 };
 
-const findAllFood = async () => {
-  const findFoods = await Food.find();
+const findAllFood = async (userId) => {
+  const findFoods = await Food.find({ userId: userId });
   return findFoods;
 };
 

@@ -5,16 +5,17 @@ const authMiddleware = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
+    console.log("token is none");
     return res.redirect("/login");
   }
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    console.log(decoded);
-    req.userId = decoded.id; // 사용자 정보를 req 객체에 저장
+    req.userId = decoded._id;
     next();
   } catch (error) {
-    res.clearCookie("token"); // 유효하지 않은 토큰이면 쿠키 삭제
+    console.error("JWT 검증 실패:", error.message);
+    res.clearCookie("token");
     res.redirect("/login");
   }
 };

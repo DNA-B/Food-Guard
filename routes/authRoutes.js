@@ -16,6 +16,7 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       maxAge: 2 * 60 * 60 * 1000, // 2시간
     });
+
     res.redirect("/");
   } catch (error) {
     res.render("login", { error: error.message });
