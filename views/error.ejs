@@ -1,2 +1,14 @@
-<h1>오류 발생</h1>
-<p><%= error %></p>
+<%- contentFor('styles') %>
+<link rel="stylesheet" href="/css/error.css" />
+
+<%- contentFor('content') %>
+<div class="error-container">
+  <h1>오류가 발생했습니다</h1>
+  <p><%= error.message %></p>
+</div>
+
+<!--
+contentFor('content'): 페이지의 주요 콘텐츠를 레이아웃의 특정 위치에 삽입
+contentFor('styles'): 페이지별로 필요한 CSS 파일을 레이아웃의 head 태그 안에 삽입
+contentFor('scripts'): 페이지별로 필요한 JavaScript 파일을 레이아웃의 body 끝부분에 삽입
+-->

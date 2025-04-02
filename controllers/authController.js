@@ -4,6 +4,12 @@ const createJWT = require("../utils/createJWT");
 
 const registerUser = async (username, password, nickname) => {
   try {
+    if (!username || !password || !nickname) {
+      res.status(422).render("error", {
+        message: "필수 조건을 모두 입력해주세요.",
+      });
+    }
+
     const hashedPassword = await bcryptHash(password);
     const user = new User({
       username: username,
@@ -13,8 +19,7 @@ const registerUser = async (username, password, nickname) => {
 
     await user.save();
   } catch (error) {
-    console.error("Error saving user:", error);
-    throw error;
+    res.status(500).render("error", { message: error.message });
   }
 };
 
@@ -23,22 +28,21 @@ const loginUser = async (username, password) => {
     const user = await User.findOne({ username });
 
     if (!user) {
-      throw new Error("User not found");
+      res.status(404).render("error", { message: "사용자를 찾을 수 없습니다" });
     }
 
     if (username !== user.username) {
-      throw new Error("Invalid credentials");
+      res.status(401).render("error", { message: "잘못된 인증 정보입니다" });
     }
 
     const isPasswordMatch = await comparePassword(password, user.password);
     if (!isPasswordMatch) {
-      throw new Error("Invalid credentials");
+      res.status(401).render("error", { message: "잘못된 인증 정보입니다" });
     }
 
     return { user: user, token: createJWT(user) };
   } catch (error) {
-    console.error("Login Error:", error);
-    throw error;
+    res.status(500).render("error", { message: error.message });
   }
 };
 
