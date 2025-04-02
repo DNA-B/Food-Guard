@@ -1,42 +1,82 @@
 const Food = require("../models/foodModel");
 
 const createFood = async (name, description, expiryDate, userId) => {
-  const newFood = new Food({
-    name: name,
-    description: description,
-    expiryDate: expiryDate,
-    userId: userId,
-  });
+  try {
+    if (!name) {
+      res.status(422).render("error", {
+        message: "필수 조건을 모두 입력해주세요.",
+      });
+    }
 
-  const savedFood = await newFood.save();
-  console.log("Saved food:", savedFood);
-};
-
-const findAllFood = async (userId) => {
-  const findFoods = await Food.find({ userId: userId });
-  return findFoods;
-};
-
-const findOneFood = async (id) => {
-  const findFood = await Food.findById(id);
-  return findFood;
-};
-
-const updateOneFood = async (id, name, description, expiryDate) => {
-  await Food.updateOne(
-    { _id: id }, // filter
-    {
-      // update field
+    const newFood = new Food({
       name: name,
       description: description,
       expiryDate: expiryDate,
+      userId: userId,
+    });
+
+    const savedFood = await newFood.save();
+    console.log("Saved food:", savedFood);
+  } catch (error) {
+    res.status(500).render("error", { message: error.message });
+  }
+};
+
+const findAllFood = async (userId) => {
+  try {
+    const findFoods = await Food.find({ userId: userId });
+
+    if (!findFoods) {
+      res.status(404).render("error", { message: "음식을 찾을 수 없습니다." });
     }
-  );
+
+    return findFoods;
+  } catch (error) {
+    res.status(500).render("error", { message: error.message });
+  }
+};
+
+const findOneFood = async (id) => {
+  try {
+    const findFood = await Food.findById(id);
+
+    if (!findFood) {
+      res.status(404).render("error", { message: "음식을 찾을 수 없습니다." });
+    }
+
+    return findFood;
+  } catch (error) {
+    res.status(500).render("error", { message: error.message });
+  }
+};
+
+const updateOneFood = async (id, name, description, expiryDate) => {
+  try {
+    if (!id) {
+      res.status(404).render("error", { message: "음식을 찾을 수 없습니다." });
+    }
+
+    await Food.updateOne(
+      { _id: id }, // filter
+      {
+        // update field
+        name: name,
+        description: description,
+        expiryDate: expiryDate,
+      }
+    );
+  } catch (error) {
+    res.status(500).render("error", { message: error.message });
+  }
 };
 
 const deleteOneFood = async (id) => {
-  await Food.deleteOne({ _id: id });
-  console.log("Delete data - id: ", id);
+  try {
+    await Food.deleteOne({ _id: id });
+    console.log("Delete data - id: ", id);
+  } catch (error) {
+    res.status(500).render("error", { message: error.message });
+  }
 };
 
 module.exports = {

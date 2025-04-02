@@ -1,0 +1,19 @@
+.error-container {
+  text-align: center;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.error-container h1 {
+  color: #e74c3c;
+  margin-bottom: 1rem;
+}
+
+.error-container p {
+  color: #2c3e50;
+  line-height: 1.6;
+}

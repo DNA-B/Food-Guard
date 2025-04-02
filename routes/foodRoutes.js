@@ -4,34 +4,17 @@ const foodController = require("../controllers/foodController.js");
 
 // find all food
 router.get("/", async (req, res) => {
-  try {
-    const userId = req.userId;
-    console.log(userId);
-    const foodList = await foodController.findAllFood(userId);
-    if (foodList) {
-      res.render("foods/index", { foodList: foodList });
-    } else {
-      res.render("error", { error: "음식을 찾을 수 없습니다" });
-    }
-  } catch (error) {
-    res.status(500).render("error", { error: error.message });
-  }
+  const userId = req.userId;
+  const foodList = await foodController.findAllFood(userId);
+  res.render("foods/index", { foodList: foodList });
 });
 
 // food create
 router.post("/create", async (req, res) => {
-  try {
-    const { name, description, expiryDate } = req.body;
-    const userId = req.userId;
-    await foodController.createFood(name, description, expiryDate, userId);
-    res.redirect("/foods");
-  } catch (error) {
-    console.error("Error:", error);
-    res.render("foods/create", {
-      error: error.message,
-      food: req.body,
-    });
-  }
+  const { name, description, expiryDate } = req.body;
+  const userId = req.userId;
+  await foodController.createFood(name, description, expiryDate, userId);
+  res.redirect("/foods");
 });
 
 // show food create page
@@ -41,73 +24,46 @@ router.get("/create", (req, res) => {
 
 // find one food
 router.get("/:id", async (req, res) => {
-  try {
-    const food = await foodController.findOneFood(req.params.id);
-
-    if (food) {
-      res.render("foods/show", { food: food });
-    } else {
-      res.render("error", { error: "음식을 찾을 수 없습니다" });
-    }
-  } catch (error) {
-    res.status(500).render("error", { error: error.message });
-  }
+  const id = req.params.id;
+  const food = await foodController.findOneFood(id);
+  res.render("foods/show", { food: food });
 });
 
 // edit food view
 router.get("/:id/edit", async (req, res) => {
-  try {
-    const food = await foodController.findOneFood(req.params.id);
-
-    if (food) {
-      res.render("foods/edit", { food: food });
-    } else {
-      res.render("error", { error: "음식을 찾을 수 없습니다" });
-    }
-  } catch (error) {
-    res.status(500).render("error", { error: error.message });
-  }
+  const id = req.params.id;
+  const food = await foodController.findOneFood(id);
+  res.render("foods/edit", { food: food });
 });
 
 // edit food
 router.put("/:id/edit", async (req, res) => {
-  try {
-    const food = await foodController.findOneFood(req.params.id);
+  const id = req.params.id;
+  const food = await foodController.findOneFood(id);
 
-    if (food) {
-      const { name, description, expiryDate } = req.body;
-      await foodController.updateOneFood(
-        req.params.id,
-        name,
-        description,
-        expiryDate
-      );
-      res.redirect("/foods");
-    } else {
-      res.render("error", { error: "음식을 찾을 수 없습니다" });
-    }
-  } catch (error) {
-    res.status(500).render("error", { error: error.message });
+  if (!food) {
+    res.status(404).render("error", { message: "음식을 찾을 수 없습니다" });
   }
+
+  const { name, description, expiryDate } = req.body;
+  await foodController.updateOneFood(
+    req.params.id,
+    name,
+    description,
+    expiryDate
+  );
+  res.redirect("/foods");
 });
 
 router.delete("/:id", async (req, res) => {
-  try {
-    const food = await foodController.findOneFood(req.params.id);
+  const food = await foodController.findOneFood(req.params.id);
 
-    if (food) {
-      await foodController.deleteOneFood(req.params.id);
-      res.redirect("/foods");
-    } else {
-      res.render("error", { error: "음식을 찾을 수 없습니다" });
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    res.render("foods/show", {
-      error: error.message,
-      food: req.body,
-    });
+  if (!food) {
+    res.status(404).render("error", { message: "음식을 찾을 수 없습니다" });
   }
+
+  await foodController.deleteOneFood(req.params.id);
+  res.redirect("/foods");
 });
 
 module.exports = router;
