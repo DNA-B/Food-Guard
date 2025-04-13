@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const groupSchema = new Schema({
   groupName: {
@@ -10,9 +10,11 @@ const groupSchema = new Schema({
     type: String,
     default: "",
   },
-  ListUserId: [
+  users: [
     {
-      type: String, // ID를 문자열로 저장
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   ],
 });

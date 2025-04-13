@@ -1,6 +1,6 @@
-const { User } = require("../models/userModel");
 const { bcryptHash, comparePassword } = require("../utils/bcrypt");
 const createJWT = require("../utils/createJWT");
+const User = require("../models/userModel");
 
 const registerUser = async (username, password, nickname) => {
   try {

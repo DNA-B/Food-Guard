@@ -12,7 +12,7 @@ const createFood = async (name, description, expiryDate, userId) => {
       name: name,
       description: description,
       expiryDate: expiryDate,
-      userId: userId,
+      user: userId,
     });
 
     const savedFood = await newFood.save();
@@ -24,7 +24,7 @@ const createFood = async (name, description, expiryDate, userId) => {
 
 const findAllFood = async (userId) => {
   try {
-    const findFoods = await Food.find({ userId: userId });
+    const findFoods = await Food.find({ user: userId });
 
     if (!findFoods) {
       res.status(404).render("error", { message: "음식을 찾을 수 없습니다." });
@@ -72,8 +72,14 @@ const updateOneFood = async (id, name, description, expiryDate) => {
 
 const deleteOneFood = async (id) => {
   try {
-    await Food.deleteOne({ _id: id });
-    console.log("Delete data - id: ", id);
+    const food = Food.findById(id);
+
+    if (!food) {
+      res.status(404).render("error", { messga: "음식을 찾을 수 없습니다." });
+    }
+
+    await Food.deleteOne(food);
+    console.log("Delete Food - id: ", id);
   } catch (error) {
     res.status(500).render("error", { message: error.message });
   }
