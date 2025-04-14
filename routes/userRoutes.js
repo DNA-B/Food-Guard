@@ -12,11 +12,17 @@ router.get("/delete", authMiddleware, (req, res) => {
   res.render("users/delete");
 });
 
-router.delete("/delete", authMiddleware, (req, res) => {
-  const id = req.userId;
-  userController.deleteOneUser(id);
-  res.clearCookie("token");
-  res.redirect("/");
+router.delete("/delete", authMiddleware, async (req, res) => {
+  try {
+    const id = req.userId;
+    await userController.deleteOneUser(id);
+    res.clearCookie("token");
+    res.redirect("/");
+  } catch (error) {
+    res
+      .status(error.statusCode || 500)
+      .render("error", { message: error.message });
+  }
 });
 
 module.exports = router;

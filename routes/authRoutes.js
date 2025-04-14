@@ -8,15 +8,21 @@ router.get("/login", (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  const result = await authController.loginUser(username, password);
+  try {
+    const { username, password } = req.body;
+    const result = await authController.loginUser(username, password);
 
-  res.cookie("token", result.token, {
-    httpOnly: true,
-    maxAge: 2 * 60 * 60 * 1000, // 2시간
-  });
+    res.cookie("token", result.token, {
+      httpOnly: true,
+      maxAge: 2 * 60 * 60 * 1000, // 2시간
+    });
 
-  res.redirect("/");
+    res.redirect("/");
+  } catch (error) {
+    res
+      .status(error.statusCode || 500)
+      .render("error", { message: error.message });
+  }
 });
 
 router.get("/register", (req, res) => {
@@ -24,9 +30,15 @@ router.get("/register", (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { username, password, nickname } = req.body;
-  await authController.registerUser(username, password, nickname);
-  res.redirect("/login");
+  try {
+    const { username, password, nickname } = req.body;
+    await authController.registerUser(username, password, nickname);
+    res.redirect("/login");
+  } catch (error) {
+    res
+      .status(error.statusCode || 500)
+      .render("error", { message: error.message });
+  }
 });
 
 router.get("/logout", authMiddleware, (req, res) => {
