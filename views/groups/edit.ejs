@@ -1,0 +1,28 @@
+<h1>음식 수정</h1>
+
+<form
+  action="/groups/<%= group._id %>/edit/?_method=PUT"
+  method="POST"
+  class="group-form"
+>
+  <div>
+    <label for="name">이름:</label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      value="<%= group.name %>"
+      required
+    />
+  </div>
+
+  <div>
+    <label for="description">설명:</label>
+    <textarea id="description" name="description">
+<%= group.description %></textarea
+    >
+  </div>
+
+  <button type="submit" class="btn">수정하기</button>
+  <a href="/groups" class="btn">취소</a>
+</form>

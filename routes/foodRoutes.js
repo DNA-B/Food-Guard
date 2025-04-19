@@ -2,12 +2,10 @@ const express = require("express");
 const router = express.Router();
 const foodController = require("../controllers/foodController.js");
 
-// find all food
-router.get("/", async (req, res) => {
+// get food create page
+router.get("/create", (req, res) => {
   try {
-    const userId = req.userId;
-    const foodList = await foodController.findAllFood(userId);
-    res.render("foods/index", { foodList: foodList });
+    res.render("foods/create");
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -15,7 +13,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// food create
+// food create process
 router.post("/create", async (req, res) => {
   try {
     const { name, description, expiryDate } = req.body;
@@ -29,10 +27,12 @@ router.post("/create", async (req, res) => {
   }
 });
 
-// show food create page
-router.get("/create", (req, res) => {
+// find all food
+router.get("/", async (req, res) => {
   try {
-    res.render("foods/create");
+    const userId = req.userId;
+    const foodList = await foodController.findAllFood(userId);
+    res.render("foods/index", { foodList: foodList });
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -45,7 +45,7 @@ router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const food = await foodController.findOneFood(id);
-    res.render("foods/show", { food: food });
+    res.render("foods/detail", { food: food });
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -53,7 +53,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// edit food view
+// get edit food page
 router.get("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
@@ -66,7 +66,7 @@ router.get("/:id/edit", async (req, res) => {
   }
 });
 
-// edit food
+// edit food process
 router.put("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
@@ -77,13 +77,8 @@ router.put("/:id/edit", async (req, res) => {
     }
 
     const { name, description, expiryDate } = req.body;
-    await foodController.updateOneFood(
-      req.params.id,
-      name,
-      description,
-      expiryDate
-    );
-    res.redirect("/foods");
+    await foodController.updateOneFood(id, name, description, expiryDate);
+    res.redirect(`/foods/${id}`);
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -91,15 +86,17 @@ router.put("/:id/edit", async (req, res) => {
   }
 });
 
+// food delete process
 router.delete("/:id", async (req, res) => {
   try {
-    const food = await foodController.findOneFood(req.params.id);
+    const id = req.params.id;
+    const food = await foodController.findOneFood(id);
 
     if (!food) {
       res.status(404).render("error", { message: "음식을 찾을 수 없습니다" });
     }
 
-    await foodController.deleteOneFood(req.params.id);
+    await foodController.deleteOneFood(id);
     res.redirect("/foods");
   } catch (error) {
     res

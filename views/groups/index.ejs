@@ -1,0 +1,14 @@
+<h1>그룹 목록</h1>
+
+<div class="group-grid">
+  <h2>
+    <% groupList.forEach(group => { %>
+    <div class="group-card">
+      <a href="/groups/<%= group._id %>" class="btn"><%= group.name %></a>
+    </div>
+    <% }); %>
+  </h2>
+</div>
+
+<hr />
+<a href="/groups/create">그룹 생성</a>

@@ -1,0 +1,16 @@
+<h1>새 그룹 추가</h1>
+
+<form action="/groups/create" method="POST" class="group-form">
+  <div>
+    <label for="name">이름:</label>
+    <input type="text" id="name" name="name" required />
+  </div>
+
+  <div>
+    <label for="description">설명:</label>
+    <textarea id="description" name="description"></textarea>
+  </div>
+
+  <button type="submit" class="btn">추가하기</button>
+  <a href="/groups" class="btn">취소</a>
+</form>
