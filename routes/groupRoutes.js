@@ -9,7 +9,7 @@ router.get("/create", async (req, res) => {
   } catch (error) {
     res
       .status(error.statusCode || 500)
-      .render("error", { message: error.message });
+      .render("error", { message: error.message, layout: false });
   }
 });
 
@@ -23,7 +23,7 @@ router.post("/create", async (req, res) => {
   } catch (error) {
     res
       .status(error.statusCode || 500)
-      .render("error", { message: error.message });
+      .render("error", { message: error.message, layout: false });
   }
 });
 
@@ -36,7 +36,7 @@ router.get("/", async (req, res) => {
   } catch (error) {
     res
       .status(error.statusCode || 500)
-      .render("error", { message: error.message });
+      .render("error", { message: error.message, layout: false });
   }
 });
 
@@ -49,7 +49,7 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     res
       .status(error.statusCode || 500)
-      .render("error", { message: error.message });
+      .render("error", { message: error.message, layout: false });
   }
 });
 
@@ -62,7 +62,7 @@ router.get("/:id/edit", async (req, res) => {
   } catch (error) {
     res
       .status(error.statusCode || 500)
-      .render("error", { message: error.message });
+      .render("error", { message: error.message, layout: false });
   }
 });
 
@@ -73,7 +73,9 @@ router.put("/:id/edit", async (req, res) => {
     const group = await groupController.findOneGroup(id);
 
     if (!group) {
-      res.status(404).render("error", { message: "그룹을 찾을 수 없습니다" });
+      res
+        .status(404)
+        .render("error", { message: "그룹을 찾을 수 없습니다", layout: false });
     }
 
     const { name, description } = req.body;
@@ -82,7 +84,7 @@ router.put("/:id/edit", async (req, res) => {
   } catch (error) {
     res
       .status(error.statusCode || 500)
-      .render("error", { message: error.message });
+      .render("error", { message: error.message, layout: false });
   }
 });
 

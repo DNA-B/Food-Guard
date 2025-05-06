@@ -21,7 +21,7 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     res
       .status(error.statusCode || 500)
-      .render("error", { message: error.message });
+      .render("error", { message: error.message, layout: false });
   }
 });
 
