@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const foodController = require("../controllers/foodController.js");
+const groupController = require("../controllers/groupController.js");
 
 // get food create page
-router.get("/create", (req, res) => {
+router.get("/create", async (req, res) => {
   try {
-    res.render("foods/create");
+    const userId = req.userId;
+    const groups = await groupController.findAllGroupByUserId(userId);
+    res.render("foods/create", { groups });
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -16,10 +19,22 @@ router.get("/create", (req, res) => {
 // food create process
 router.post("/create", async (req, res) => {
   try {
-    const { name, description, expiryDate } = req.body;
+    const { name, description, expiryDate, groupId } = req.body;
     const userId = req.userId;
-    await foodController.createFood(name, description, expiryDate, userId);
-    res.redirect("/foods");
+    await foodController.createFood(
+      name,
+      description,
+      expiryDate,
+      userId,
+      groupId === "" ? null : groupId
+    );
+
+    if (groupId === "") {
+      // 빈 문자열이면 나눔 페이지에서 생성된 음식
+      res.redirect("/foods");
+    } else {
+      res.redirect(`/groups/${groupId}/foods`);
+    }
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -31,7 +46,7 @@ router.post("/create", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const userId = req.userId;
-    const foodList = await foodController.findAllFood(userId);
+    const foodList = await foodController.findAllFoodByUserId(userId);
     res.render("foods/index", { foodList: foodList });
   } catch (error) {
     res

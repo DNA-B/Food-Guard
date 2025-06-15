@@ -1,36 +1,86 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="h-full bg-gray-50">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
-    <title>Document</title>
+    <title>Food Guard</title>
+    <style>
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+      }
+    </style>
   </head>
-  <body>
-    <header class="main-header">
-      <nav class="nav-container">
-        <div class="logo">
-          <h1><a href="/">Food Guard</a></h1>
+  <body class="h-full flex flex-col min-h-screen">
+    <header class="bg-white shadow-sm">
+      <nav class="max-w-7xl mx-auto px-6 sm:px-4 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <div class="flex-shrink-0">
+            <a
+              href="/"
+              class="text-3xl font-bold text-indigo-600 hover:text-indigo-500 transition-colors"
+            >
+              Food Guard
+            </a>
+          </div>
+          <ul class="flex space-x-8">
+            <li>
+              <a
+                href="/users"
+                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                마이페이지
+              </a>
+            </li>
+            <li>
+              <a
+                href="/groups"
+                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                그룹
+              </a>
+            </li>
+            <% if (cookies.token) { %>
+            <li>
+              <a
+                href="/logout"
+                class="text-gray-600 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                로그아웃
+              </a>
+            </li>
+            <% } else { %>
+            <li>
+              <a href="/login"> 로그인 </a>
+            </li>
+            <li>
+              <a
+                href="/register"
+                class="bg-indigo-600 text-white hover:bg-indigo-500 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                회원가입
+              </a>
+            </li>
+            <% } %>
+          </ul>
         </div>
-        <ul class="nav-menu">
-          <li><a href="/foods">음식</a></li>
-          <li><a href="/users">마이페이지</a></li>
-          <li><a href="/groups">그룹</a></li>
-          <li><a href="/login">로그인</a></li>
-          <li><a href="/register">회원가입</a></li>
-          <li><a href="/logout">로그아웃</a></li>
-        </ul>
       </nav>
     </header>
 
-    <main class="main"><%- body %></main>
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <%- body %>
+    </main>
 
-    <footer class="main-footer">
-      <p>&copy; 2025 - food guard. All rights reserved.</p>
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <p class="text-center text-gray-500 text-sm">
+          &copy; 2025 - Food Guard. All rights reserved.
+        </p>
+      </div>
     </footer>
   </body>
 </html>

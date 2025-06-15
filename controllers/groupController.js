@@ -1,6 +1,6 @@
 const Group = require("../models/groupModel");
 
-const findAllGroup = async (userId) => {
+const findAllGroupByUserId = async (userId) => {
   const findGroups = await Group.find({ users: userId });
 
   if (!findGroups) {
@@ -44,30 +44,54 @@ const updateOneGroup = async (id, name, description) => {
   }
 
   await Group.updateOne(
-    { _id: id }, // filter
+    { _id: id },
     {
-      // update field
       name: name,
       description: description,
     }
   );
 };
 
-const deleteOneGroup = async (id) => {
-  const group = Group.findById(id);
+const exitOneGroup = async (id, userId) => {
+  const group = await Group.findById(id);
 
   if (!group) {
     throw new Error({ message: "그룹을 찾을 수 없습니다.", statusCode: 404 });
   }
 
-  await Group.deleteOne(group);
-  console.log("Delete Group - id: ", id);
+  // error, if user not in group
+  if (!group.users.includes(userId)) {
+    throw new Error({
+      message: "유저가 그룹에 속해있지 않습니다.",
+      statusCode: 400,
+    });
+  }
+
+  // if last user, delete group
+  if (group.users.length === 1) {
+    console.log(`delete group: ${id}`);
+    await Group.deleteOne({ _id: id });
+    return;
+  }
+
+  await Group.updateOne({ _id: id }, { $pull: { users: userId } });
+};
+
+const findAllUsersInGroup = async (groupId) => {
+  const group = await Group.findById(groupId).populate("users");
+
+  if (!group) {
+    throw new Error({ message: "그룹을 찾을 수 없습니다.", statusCode: 404 });
+  }
+
+  return group.users;
 };
 
 module.exports = {
-  findAllGroup,
+  findAllGroupByUserId,
   findOneGroup,
   createGroup,
   updateOneGroup,
-  deleteOneGroup,
+  exitOneGroup,
+  findAllUsersInGroup,
 };

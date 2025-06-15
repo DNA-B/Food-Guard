@@ -1,14 +1,22 @@
-<h1>그룹 목록</h1>
-
-<div class="group-grid">
-  <h2>
+<div class="flex flex-col items-center min-h-[60vh]">
+  <h1 class="text-3xl font-bold text-indigo-700 mb-6">그룹 목록</h1>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mb-8">
     <% groupList.forEach(group => { %>
-    <div class="group-card">
-      <a href="/groups/<%= group._id %>" class="btn"><%= group.name %></a>
+    <div
+      class="bg-white shadow rounded-lg p-8 flex items-center justify-between gap-4"
+    >
+      <span class="text-xl font-semibold text-gray-800"><%= group.name %></span>
+      <a
+        href="/groups/<%= group._id %>"
+        class="px-5 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 font-semibold transition"
+        >상세보기</a
+      >
     </div>
     <% }); %>
-  </h2>
+  </div>
+  <a
+    href="/groups/create"
+    class="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 font-semibold transition"
+    >그룹 생성</a
+  >
 </div>
-
-<hr />
-<a href="/groups/create">그룹 생성</a>

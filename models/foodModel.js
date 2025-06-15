@@ -18,6 +18,11 @@ const foodSchema = new Schema({
     ref: "User",
     required: true,
   },
+  group: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Group",
+    default: null,
+  },
 });
 
 const Food = mongoose.model("Food", foodSchema);

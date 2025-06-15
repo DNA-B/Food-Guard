@@ -12,4 +12,6 @@ const deleteOneUser = async (id) => {
   await user.deleteOne();
 };
 
-module.exports = { deleteOneUser };
+module.exports = {
+  deleteOneUser,
+};

@@ -19,6 +19,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(cookieParser());
 
+// 템플릿에서 쿠키 접근 가능하도록 설정
+app.use((req, res, next) => {
+  res.locals.cookies = req.cookies;
+  next();
+});
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
