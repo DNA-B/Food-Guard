@@ -77,21 +77,10 @@ const exitOneGroup = async (id, userId) => {
   await Group.updateOne({ _id: id }, { $pull: { users: userId } });
 };
 
-const findAllUsersInGroup = async (groupId) => {
-  const group = await Group.findById(groupId).populate("users");
-
-  if (!group) {
-    throw new Error({ message: "그룹을 찾을 수 없습니다.", statusCode: 404 });
-  }
-
-  return group.users;
-};
-
 module.exports = {
   findAllGroupByUserId,
   findOneGroup,
   createGroup,
   updateOneGroup,
   exitOneGroup,
-  findAllUsersInGroup,
 };

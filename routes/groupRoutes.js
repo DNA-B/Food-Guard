@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const groupController = require("../controllers/groupController.js");
 const foodController = require("../controllers/foodController.js");
+const usersController = require("../controllers/userController.js");
 
 // get group create page
 router.get("/create", async (req, res) => {
@@ -106,7 +107,7 @@ router.get("/:id/foods", async (req, res) => {
 router.get("/:id/users", async (req, res) => {
   try {
     const id = req.params.id;
-    const users = await groupController.findAllUsersInGroup(id);
+    const users = await usersController.findAllUsersByGroupId(id);
     res.render("groups/users", { userList: users });
   } catch (error) {
     res
