@@ -1,6 +1,6 @@
 const Food = require("../models/foodModel");
 
-const createFood = async (name, description, expiryDate, userId, groupId) => {
+const createFood = async (name, description, expiryAt, userId, groupId) => {
   if (!name) {
     throw new Error({
       message: "필수 조건을 모두 입력해주세요.",
@@ -11,7 +11,7 @@ const createFood = async (name, description, expiryDate, userId, groupId) => {
   const newFood = new Food({
     name: name,
     description: description,
-    expiryDate: expiryDate,
+    expiryAt: expiryAt,
     user: userId,
     group: groupId,
   });
@@ -50,7 +50,7 @@ const findOneFood = async (id) => {
   return findFood;
 };
 
-const updateOneFood = async (id, name, description, expiryDate) => {
+const updateOneFood = async (id, name, description, expiryAt) => {
   if (!id) {
     throw new Error({ message: "음식을 찾을 수 없습니다.", statusCode: 404 });
   }
@@ -61,7 +61,7 @@ const updateOneFood = async (id, name, description, expiryDate) => {
       // update field
       name: name,
       description: description,
-      expiryDate: expiryDate,
+      expiryAt: expiryAt,
     }
   );
 };

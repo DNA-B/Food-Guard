@@ -31,7 +31,7 @@
             <li>
               <a
                 href="/users"
-                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 마이페이지
               </a>
@@ -39,14 +39,15 @@
             <li>
               <a
                 href="/foods"
-                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                ><b>내 음식 보기</b></a
+                class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                내 음식 보기</a
               ><br />
             </li>
             <li>
               <a
                 href="/groups"
-                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 그룹
               </a>
@@ -55,19 +56,24 @@
             <li>
               <a
                 href="/logout"
-                class="text-gray-600 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 로그아웃
               </a>
             </li>
             <% } else { %>
             <li>
-              <a href="/login"> 로그인 </a>
+              <a
+                href="/login"
+                class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                로그인
+              </a>
             </li>
             <li>
               <a
                 href="/register"
-                class="bg-indigo-600 text-white hover:bg-indigo-500 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                class="bg-indigo-600 text-white hover:bg-indigo-500 hover:underline px-4 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 회원가입
               </a>

@@ -95,7 +95,7 @@ router.get("/:id/foods", async (req, res) => {
   try {
     const id = req.params.id;
     const foods = await foodController.findAllFoodByGroupId(id);
-    res.render("foods", { foodList: foods });
+    res.render("groups/foods", { foodList: foods });
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -107,8 +107,11 @@ router.get("/:id/foods", async (req, res) => {
 router.get("/:id/users", async (req, res) => {
   try {
     const id = req.params.id;
-    const users = await usersController.findAllUsersByGroupId(id);
-    res.render("groups/users", { userList: users });
+    const result = await usersController.findAllUsersByGroupId(id);
+    res.render("groups/users", {
+      userList: result.users,
+      managerId: result.managerId,
+    });
   } catch (error) {
     res
       .status(error.statusCode || 500)

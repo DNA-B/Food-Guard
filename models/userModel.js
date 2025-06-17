@@ -3,11 +3,14 @@ const { Schema } = mongoose;
 const Food = require("./foodModel");
 const Group = require("./groupModel");
 
-const userSchema = new Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  nickname: { type: String, unique: true },
-});
+const userSchema = new Schema(
+  {
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    nickname: { type: String, unique: true },
+  },
+  { timestamps: true }
+);
 
 // User 삭제 시 관련 데이터 정리
 userSchema.pre(

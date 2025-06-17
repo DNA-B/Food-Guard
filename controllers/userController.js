@@ -20,7 +20,10 @@ const findAllUsersByGroupId = async (groupId) => {
     throw new Error({ message: "그룹을 찾을 수 없습니다.", statusCode: 404 });
   }
 
-  return group.users;
+  return {
+    users: group.users,
+    managerId: group.manager,
+  };
 };
 
 const deleteOneUser = async (id) => {

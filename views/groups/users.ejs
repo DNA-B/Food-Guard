@@ -7,18 +7,31 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <% userList.forEach(user => { %>
       <div
-        class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-200"
+        class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-200 relative"
       >
         <div class="flex flex-col items-center">
-          <div
-            class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4"
-          >
-            <span class="text-2xl text-green-600 font-bold">
-              <%= user.nickname ? user.nickname.charAt(0).toUpperCase() : '?' %>
+          <div class="relative w-16 h-16 mb-4">
+            <div
+              class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center"
+            >
+              <span class="text-2xl text-green-600 font-bold">
+                <%= user.nickname ? user.nickname.charAt(0).toUpperCase() : '?'
+                %>
+              </span>
+            </div>
+            <% if (managerId.equals(user._id)) { %>
+            <span
+              class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xl"
+            >
+              👑
             </span>
+            <% } %>
           </div>
           <h2 class="text-xl font-semibold text-gray-800 mb-2">
             <%= user.nickname %>
+            <span class="text-yellow-600 text-sm ml-1">
+              <%= managerId.equals(user._id) ? '(매니저)' : '(그룹원)' %>
+            </span>
           </h2>
           <p class="text-gray-600 text-sm"><%= user.email %></p>
         </div>

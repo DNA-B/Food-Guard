@@ -1,4 +1,5 @@
 const Group = require("../models/groupModel");
+const Food = require("../models/foodModel");
 
 const findAllGroupByUserId = async (userId) => {
   const findGroups = await Group.find({ users: userId });
@@ -30,6 +31,7 @@ const createGroup = async (name, description, userId) => {
 
   const newGroup = new Group({
     name: name,
+    manager: userId,
     description: description,
     users: [userId],
   });
@@ -67,6 +69,12 @@ const exitOneGroup = async (id, userId) => {
     });
   }
 
+  // delete
+  const deleteResult = await Food.deleteMany({ user: userId, group: id });
+  console.log(
+    `Deleted ${deleteResult.deletedCount} foods for user ${userId} in group ${id}`
+  );
+
   // if last user, delete group
   if (group.users.length === 1) {
     console.log(`delete group: ${id}`);
@@ -74,7 +82,16 @@ const exitOneGroup = async (id, userId) => {
     return;
   }
 
-  await Group.updateOne({ _id: id }, { $pull: { users: userId } });
+  const newManager = group.users.find((user) => !user.equals(userId));
+
+  const updateResult = await Group.updateOne(
+    { _id: id },
+    { $pull: { users: userId }, $set: { manager: newManager } }
+  );
+
+  console.log(
+    `Matched ${updateResult.matchedCount} group, removed user from ${updateResult.modifiedCount} group`
+  );
 };
 
 module.exports = {

@@ -32,6 +32,8 @@ router.get("/register", (req, res) => {
 router.post("/register", async (req, res) => {
   try {
     const { username, password, nickname } = req.body;
+    // TODO
+    // 닉네임 중복 확인할 것인지 아닌지 결정
     await authController.registerUser(username, password, nickname);
     res.redirect("/login");
   } catch (error) {

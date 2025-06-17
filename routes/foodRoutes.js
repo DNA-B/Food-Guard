@@ -19,12 +19,12 @@ router.get("/create", async (req, res) => {
 // food create process
 router.post("/create", async (req, res) => {
   try {
-    const { name, description, expiryDate, groupId } = req.body;
+    const { name, description, expiryAt, groupId } = req.body;
     const userId = req.userId;
     await foodController.createFood(
       name,
       description,
-      expiryDate,
+      expiryAt,
       userId,
       groupId === "" ? null : groupId
     );
@@ -93,8 +93,8 @@ router.put("/:id/edit", async (req, res) => {
         .render("error", { message: "음식을 찾을 수 없습니다", layout: false });
     }
 
-    const { name, description, expiryDate } = req.body;
-    await foodController.updateOneFood(id, name, description, expiryDate);
+    const { name, description, expiryAt } = req.body;
+    await foodController.updateOneFood(id, name, description, expiryAt);
     res.redirect(`/foods/${id}`);
   } catch (error) {
     res
