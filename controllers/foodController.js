@@ -17,7 +17,7 @@ const createFood = async (name, description, expiryAt, userId, groupId) => {
   });
 
   const savedFood = await newFood.save();
-  console.log("Saved food:", savedFood);
+  console.log("Saved Food:", savedFood);
 };
 
 const findAllFoodByUserId = async (userId) => {

@@ -2,11 +2,17 @@ const { bcryptHash, comparePassword } = require("../utils/bcrypt");
 const createJWT = require("../utils/createJWT");
 const User = require("../models/userModel");
 
+const checkDuplicateNickname = async (nickname) => {
+  const user = await User.findOne({ nickname: nickname });
+  return !!user; // 중복이면 true, 아니면 false 반환
+};
+
 const registerUser = async (username, password, nickname) => {
   if (!username || !password || !nickname) {
-    const error = new Error("필수 조건을 모두 입력해주세요.");
-    error.statusCode = 422;
-    throw error;
+    throw new Error({
+      message: "필수 조건을 모두 입력해주세요.",
+      statusCode: 422,
+    });
   }
 
   const hashedPassword = await bcryptHash(password);
@@ -23,25 +29,28 @@ const loginUser = async (username, password) => {
   const user = await User.findOne({ username });
 
   if (!user) {
-    const error = new Error("사용자를 찾을 수 없습니다");
-    error.statusCode = 404;
-    throw error;
+    throw new Error({
+      message: "사용자를 찾을 수 없습니다.",
+      statusCode: 404,
+    });
   }
 
   if (username !== user.username) {
-    const error = new Error("잘못된 인증 정보입니다");
-    error.statusCode = 401;
-    throw error;
+    throw new Error({
+      message: "잘못된 인증 정보입니다.",
+      statusCode: 401,
+    });
   }
 
   const isPasswordMatch = await comparePassword(password, user.password);
   if (!isPasswordMatch) {
-    const error = new Error("잘못된 인증 정보입니다");
-    error.statusCode = 401;
-    throw error;
+    throw new Error({
+      message: "잘못된 인증 정보입니다.",
+      statusCode: 401,
+    });
   }
 
   return { user: user, token: createJWT(user) };
 };
 
-module.exports = { registerUser, loginUser };
+module.exports = { checkDuplicateNickname, registerUser, loginUser };

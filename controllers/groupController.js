@@ -69,28 +69,20 @@ const exitOneGroup = async (id, userId) => {
     });
   }
 
-  // delete
+  // delete group
   const deleteResult = await Food.deleteMany({ user: userId, group: id });
-  console.log(
-    `Deleted ${deleteResult.deletedCount} foods for user ${userId} in group ${id}`
-  );
 
   // if last user, delete group
   if (group.users.length === 1) {
-    console.log(`delete group: ${id}`);
+    console.log(`Delete group: ${id}`);
     await Group.deleteOne({ _id: id });
     return;
   }
 
   const newManager = group.users.find((user) => !user.equals(userId));
-
   const updateResult = await Group.updateOne(
     { _id: id },
     { $pull: { users: userId }, $set: { manager: newManager } }
-  );
-
-  console.log(
-    `Matched ${updateResult.matchedCount} group, removed user from ${updateResult.modifiedCount} group`
   );
 };
 

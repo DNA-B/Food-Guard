@@ -32,8 +32,6 @@ router.get("/register", (req, res) => {
 router.post("/register", async (req, res) => {
   try {
     const { username, password, nickname } = req.body;
-    // TODO
-    // 닉네임 중복 확인할 것인지 아닌지 결정
     await authController.registerUser(username, password, nickname);
     res.redirect("/login");
   } catch (error) {
@@ -46,6 +44,19 @@ router.post("/register", async (req, res) => {
 router.get("/logout", authMiddleware, (req, res) => {
   res.clearCookie("token");
   res.redirect("/");
+});
+
+router.post("/check/nickname", async (req, res) => {
+  try {
+    const { nickname } = req.body;
+    const isDuplicate = await authController.checkDuplicateNickname(nickname);
+    console.log(isDuplicate);
+    res.json({ isDuplicate });
+  } catch (error) {
+    res
+      .status(error.statusCode || 500)
+      .render("error", { message: error.message });
+  }
 });
 
 module.exports = router;

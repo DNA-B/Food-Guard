@@ -1,11 +1,11 @@
-<div class="flex justify-center items-center min-h-[60vh]">
-  <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-sm">
-    <h1 class="text-2xl font-bold text-center text-indigo-700 mb-6">
+<div class="flex justify-center items-center min-h-[70vh]">
+  <div class="bg-white shadow-lg rounded-xl p-10 w-full max-w-md">
+    <h1 class="text-3xl font-bold text-center text-indigo-700 mb-8">
       회원가입
     </h1>
-    <form action="/register" method="POST" class="space-y-4">
+    <form action="/register" method="POST" class="space-y-6">
       <div>
-        <label for="username" class="block text-gray-700 font-medium mb-1"
+        <label for="username" class="block text-gray-700 font-medium mb-2"
           >아이디</label
         >
         <input
@@ -13,11 +13,11 @@
           id="username"
           name="username"
           required
-          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400 text-lg"
         />
       </div>
       <div>
-        <label for="password" class="block text-gray-700 font-medium mb-1"
+        <label for="password" class="block text-gray-700 font-medium mb-2"
           >비밀번호</label
         >
         <input
@@ -25,34 +25,99 @@
           id="password"
           name="password"
           required
-          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400 text-lg"
         />
       </div>
       <div>
-        <label for="nickname" class="block text-gray-700 font-medium mb-1"
+        <label for="nickname" class="block text-gray-700 font-medium mb-2"
           >닉네임</label
         >
-        <input
-          type="text"
-          id="nickname"
-          name="nickname"
-          required
-          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-        />
+        <div class="flex gap-4">
+          <input
+            type="text"
+            id="nickname"
+            name="nickname"
+            required
+            class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400 text-lg"
+          />
+          <button
+            type="button"
+            id="checkNickname"
+            class="px-5 py-3 bg-indigo-600 text-white rounded hover:bg-indigo-500 font-semibold transition text-lg whitespace-nowrap"
+          >
+            중복 검사
+          </button>
+        </div>
+        <span id="nicknameMessage" class="text-sm hidden"></span>
       </div>
-      <div class="flex gap-2 mt-6">
+      <div class="flex gap-4 mt-8">
         <button
           type="submit"
-          class="w-full px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 font-semibold transition"
+          class="opacity-50 w-full px-5 py-3 bg-indigo-600 text-white rounded hover:bg-indigo-500 font-semibold transition text-lg"
+          disabled
         >
           회원가입
         </button>
         <a
           href="/"
-          class="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded text-center hover:bg-gray-300 font-semibold transition"
+          class="w-full px-5 py-3 bg-gray-200 text-gray-700 rounded text-center hover:bg-gray-300 font-semibold transition text-lg"
           >취소</a
         >
       </div>
     </form>
   </div>
 </div>
+
+<script>
+  document
+    .getElementById("checkNickname")
+    .addEventListener("click", async () => {
+      const nickname = document.getElementById("nickname").value;
+      const messageElement = document.getElementById("nicknameMessage");
+      const checkButton = document.getElementById("checkNickname");
+      const submitButton = document.querySelector('button[type="submit"]');
+
+      if (!nickname) {
+        messageElement.textContent = "닉네임을 입력해주세요.";
+        messageElement.classList.remove("hidden");
+        messageElement.classList.add("text-red-500");
+        return;
+      }
+
+      try {
+        const response = await fetch("check/nickname", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ nickname }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          if (data.isDuplicate) {
+            messageElement.textContent = "중복된 닉네임입니다.";
+            messageElement.classList.remove("hidden", "text-green-500");
+            messageElement.classList.add("text-red-500");
+          } else {
+            messageElement.textContent = "사용 가능한 닉네임입니다.";
+            messageElement.classList.remove("hidden", "text-red-500");
+            messageElement.classList.add("text-green-500");
+            submitButton.disabled = false;
+            submitButton.classList.remove("opacity-50", "cursor-not-allowed");
+          }
+        } else {
+          messageElement.textContent = "서버 오류: 다시 시도해주세요.";
+          messageElement.classList.remove("hidden");
+          messageElement.classList.add("text-red-500");
+        }
+      } catch (error) {
+        console.error("Error during fetch:", error);
+        messageElement.textContent = "오류가 발생했습니다. 다시 시도해주세요.";
+        messageElement.classList.remove("hidden");
+        messageElement.classList.add("text-red-500");
+      }
+    });
+</script>
