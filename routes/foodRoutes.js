@@ -52,6 +52,7 @@ router.get("/", async (req, res) => {
     const foodList = await foodController.findAllFoodByUserId(userId);
     res.render("foods/index", { foodList: foodList });
   } catch (error) {
+    console.log("던져진 오류:", error.message, error.statusCode); // 디버깅
     res
       .status(error.statusCode || 500)
       .render("error", { message: error.message, layout: false });

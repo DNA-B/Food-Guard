@@ -17,7 +17,9 @@ const findAllUsersByGroupId = async (groupId) => {
   const group = await Group.findById(groupId).populate("users");
 
   if (!group) {
-    throw new Error({ message: "그룹을 찾을 수 없습니다.", statusCode: 404 });
+    const error = new Error("그룹을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
   }
 
   return {

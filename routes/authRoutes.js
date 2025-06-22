@@ -50,7 +50,6 @@ router.post("/check/nickname", async (req, res) => {
   try {
     const { nickname } = req.body;
     const isDuplicate = await authController.checkDuplicateNickname(nickname);
-    console.log(isDuplicate);
     res.json({ isDuplicate });
   } catch (error) {
     res

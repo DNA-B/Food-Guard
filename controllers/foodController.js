@@ -2,10 +2,9 @@ const Food = require("../models/foodModel");
 
 const createFood = async (name, description, expiryAt, userId, groupId) => {
   if (!name) {
-    throw new Error({
-      message: "필수 조건을 모두 입력해주세요.",
-      statusCode: 422,
-    });
+    const error = new Error("필수 조건을 모두 입력해주세요.");
+    error.statusCode = 422;
+    throw error;
   }
 
   const newFood = new Food({
@@ -23,8 +22,10 @@ const createFood = async (name, description, expiryAt, userId, groupId) => {
 const findAllFoodByUserId = async (userId) => {
   const findFoods = await Food.find({ user: userId });
 
-  if (!findFoods) {
-    throw new Error({ message: "음식을 찾을 수 없습니다.", statusCode: 404 });
+  if (findFoods) {
+    const error = new Error("음식을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
   }
 
   return findFoods;
@@ -34,7 +35,9 @@ const findAllFoodByGroupId = async (groupId) => {
   const findFoods = await Food.find({ group: groupId });
 
   if (!findFoods) {
-    throw new Error({ message: "음식을 찾을 수 없습니다.", statusCode: 404 });
+    const error = new Error("음식을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
   }
 
   return findFoods;
@@ -44,7 +47,9 @@ const findOneFood = async (id) => {
   const findFood = await Food.findById(id);
 
   if (!findFood) {
-    throw new Error({ message: "음식을 찾을 수 없습니다.", statusCode: 404 });
+    const error = new Error("음식을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
   }
 
   return findFood;
@@ -52,7 +57,9 @@ const findOneFood = async (id) => {
 
 const updateOneFood = async (id, name, description, expiryAt) => {
   if (!id) {
-    throw new Error({ message: "음식을 찾을 수 없습니다.", statusCode: 404 });
+    const error = new Error("음식을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
   }
 
   await Food.updateOne(
@@ -70,7 +77,9 @@ const deleteOneFood = async (id) => {
   const food = await Food.findById(id);
 
   if (!food) {
-    throw new Error({ message: "음식을 찾을 수 없습니다.", statusCode: 404 });
+    const error = new Error("음식을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
   }
 
   await Food.deleteOne({ _id: id });

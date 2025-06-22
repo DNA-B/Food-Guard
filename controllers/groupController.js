@@ -5,7 +5,9 @@ const findAllGroupByUserId = async (userId) => {
   const findGroups = await Group.find({ users: userId });
 
   if (!findGroups) {
-    throw new Error({ message: "그룹을 찾을 수 없습니다.", statusCode: 404 });
+    const error = new Error("그룹을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
   }
 
   return findGroups;
@@ -15,7 +17,9 @@ const findOneGroup = async (id) => {
   const findGroup = await Group.findById(id);
 
   if (!findGroup) {
-    throw new Error({ message: "그룹을 찾을 수 없습니다.", statusCode: 404 });
+    const error = new Error("그룹을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
   }
 
   return findGroup;
@@ -23,10 +27,9 @@ const findOneGroup = async (id) => {
 
 const createGroup = async (name, description, userId) => {
   if (!name) {
-    throw new Error({
-      message: "필수 조건을 모두 입력해주세요.",
-      statusCode: 422,
-    });
+    const error = new Error("필수 조건을 모두 입력해주세요.");
+    error.statusCode = 422;
+    throw error;
   }
 
   const newGroup = new Group({
@@ -42,7 +45,9 @@ const createGroup = async (name, description, userId) => {
 
 const updateOneGroup = async (id, name, description) => {
   if (!id) {
-    throw new Error({ message: "그룹을 찾을 수 없습니다.", statusCode: 404 });
+    const error = new Error("그룹을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
   }
 
   await Group.updateOne(
@@ -58,15 +63,16 @@ const exitOneGroup = async (id, userId) => {
   const group = await Group.findById(id);
 
   if (!group) {
-    throw new Error({ message: "그룹을 찾을 수 없습니다.", statusCode: 404 });
+    const error = new Error("그룹을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
   }
 
   // error, if user not in group
   if (!group.users.includes(userId)) {
-    throw new Error({
-      message: "유저가 그룹에 속해있지 않습니다.",
-      statusCode: 400,
-    });
+    const error = new Error("유저가 그룹에 속해있지 않습니다.");
+    error.statusCode = 400;
+    throw error;
   }
 
   // delete group
@@ -80,7 +86,7 @@ const exitOneGroup = async (id, userId) => {
   }
 
   const newManager = group.users.find((user) => !user.equals(userId));
-  const updateResult = await Group.updateOne(
+  await Group.updateOne(
     { _id: id },
     { $pull: { users: userId }, $set: { manager: newManager } }
   );
