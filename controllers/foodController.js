@@ -22,7 +22,7 @@ const createFood = async (name, description, expiryAt, userId, groupId) => {
 const findAllFoodByUserId = async (userId) => {
   const findFoods = await Food.find({ user: userId });
 
-  if (findFoods) {
+  if (!findFoods) {
     const error = new Error("음식을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
