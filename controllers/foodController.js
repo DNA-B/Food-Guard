@@ -43,7 +43,7 @@ const findAllFoodByGroupId = async (groupId) => {
   return findFoods;
 };
 
-const findOneFood = async (id) => {
+const findFoodById = async (id) => {
   const findFood = await Food.findById(id);
 
   if (!findFood) {
@@ -55,7 +55,7 @@ const findOneFood = async (id) => {
   return findFood;
 };
 
-const updateOneFood = async (id, name, description, expiryAt) => {
+const updateFood = async (id, name, description, expiryAt) => {
   if (!id) {
     const error = new Error("음식을 찾을 수 없습니다.");
     error.statusCode = 404;
@@ -73,7 +73,7 @@ const updateOneFood = async (id, name, description, expiryAt) => {
   );
 };
 
-const deleteOneFood = async (id) => {
+const deleteFood = async (id) => {
   const food = await Food.findById(id);
 
   if (!food) {
@@ -89,7 +89,7 @@ module.exports = {
   createFood,
   findAllFoodByUserId,
   findAllFoodByGroupId,
-  findOneFood,
-  updateOneFood,
-  deleteOneFood,
+  findFoodById,
+  updateFood,
+  deleteFood,
 };

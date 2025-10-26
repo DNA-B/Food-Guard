@@ -1,7 +1,7 @@
 const User = require("../models/userModel");
 const Group = require("../models/groupModel");
 
-const findOneUser = async (id) => {
+const findUserById = async (id) => {
   const user = await User.findById(id);
 
   if (!user) {
@@ -28,7 +28,7 @@ const findAllUsersByGroupId = async (groupId) => {
   };
 };
 
-const deleteOneUser = async (id) => {
+const deleteUser = async (id) => {
   const user = await User.findById(id);
 
   if (!user) {
@@ -41,7 +41,7 @@ const deleteOneUser = async (id) => {
 };
 
 module.exports = {
-  findOneUser,
+  findUserById,
   findAllUsersByGroupId,
-  deleteOneUser,
+  deleteUser,
 };

@@ -7,7 +7,7 @@ const userController = require("../controllers/userController");
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const id = req.userId;
-    const user = await userController.findOneUser(id);
+    const user = await userController.findUserById(id);
     res.render("users", { nickname: user.nickname });
   } catch (error) {
     res
@@ -26,7 +26,7 @@ router.get("/delete", authMiddleware, (req, res) => {
 router.delete("/delete", authMiddleware, async (req, res) => {
   try {
     const id = req.userId;
-    await userController.deleteOneUser(id);
+    await userController.deleteUser(id);
     res.clearCookie("token");
     res.redirect("/");
   } catch (error) {

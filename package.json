@@ -20,5 +20,8 @@
     "method-override": "^3.0.0",
     "mongoose": "^8.10.1",
     "nodemon": "^3.1.9"
+  },
+  "devDependencies": {
+    "prettier-plugin-ejs": "^1.0.3"
   }
 }

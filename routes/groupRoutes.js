@@ -46,7 +46,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const group = await groupController.findOneGroup(id);
+    const group = await groupController.findGroupById(id);
     res.render("groups/detail", { group: group });
   } catch (error) {
     res
@@ -59,7 +59,7 @@ router.get("/:id", async (req, res) => {
 router.get("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
-    const group = await groupController.findOneGroup(id);
+    const group = await groupController.findGroupById(id);
     res.render("groups/edit", { group: group });
   } catch (error) {
     res
@@ -72,7 +72,7 @@ router.get("/:id/edit", async (req, res) => {
 router.put("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
-    const group = await groupController.findOneGroup(id);
+    const group = await groupController.findGroupById(id);
 
     if (!group) {
       res
@@ -81,7 +81,7 @@ router.put("/:id/edit", async (req, res) => {
     }
 
     const { name, description } = req.body;
-    await groupController.updateOneGroup(id, name, description);
+    await groupController.updateGroup(id, name, description);
     res.redirect(`/groups/${id}`);
   } catch (error) {
     res
@@ -124,7 +124,7 @@ router.post("/:id/exit", async (req, res) => {
   try {
     const id = req.params.id;
     const userId = req.userId;
-    await groupController.exitOneGroup(id, userId);
+    await groupController.exitGroup(id, userId);
     res.redirect("/groups");
   } catch (error) {
     res

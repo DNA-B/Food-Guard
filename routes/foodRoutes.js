@@ -63,7 +63,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const food = await foodController.findOneFood(id);
+    const food = await foodController.findFoodById(id);
     res.render("foods/detail", { food: food });
   } catch (error) {
     res
@@ -76,7 +76,7 @@ router.get("/:id", async (req, res) => {
 router.get("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
-    const food = await foodController.findOneFood(id);
+    const food = await foodController.findFoodById(id);
     res.render("foods/edit", { food: food });
   } catch (error) {
     res
@@ -89,7 +89,7 @@ router.get("/:id/edit", async (req, res) => {
 router.put("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
-    const food = await foodController.findOneFood(id);
+    const food = await foodController.findFoodById(id);
 
     if (!food) {
       res
@@ -98,7 +98,7 @@ router.put("/:id/edit", async (req, res) => {
     }
 
     const { name, description, expiryAt } = req.body;
-    await foodController.updateOneFood(id, name, description, expiryAt);
+    await foodController.updateFood(id, name, description, expiryAt);
     res.redirect(`/foods/${id}`);
   } catch (error) {
     res
@@ -111,7 +111,7 @@ router.put("/:id/edit", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const food = await foodController.findOneFood(id);
+    const food = await foodController.findFoodById(id);
 
     if (!food) {
       res
@@ -119,7 +119,7 @@ router.delete("/:id", async (req, res) => {
         .render("error", { message: "음식을 찾을 수 없습니다", layout: false });
     }
 
-    await foodController.deleteOneFood(id);
+    await foodController.deleteFood(id);
     res.redirect("/foods");
   } catch (error) {
     res

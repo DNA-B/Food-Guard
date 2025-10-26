@@ -1,30 +1,6 @@
 const Group = require("../models/groupModel");
 const Food = require("../models/foodModel");
 
-const findAllGroupByUserId = async (userId) => {
-  const findGroups = await Group.find({ users: userId });
-
-  if (!findGroups) {
-    const error = new Error("그룹을 찾을 수 없습니다.");
-    error.statusCode = 404;
-    throw error;
-  }
-
-  return findGroups;
-};
-
-const findOneGroup = async (id) => {
-  const findGroup = await Group.findById(id);
-
-  if (!findGroup) {
-    const error = new Error("그룹을 찾을 수 없습니다.");
-    error.statusCode = 404;
-    throw error;
-  }
-
-  return findGroup;
-};
-
 const createGroup = async (name, description, userId) => {
   if (!name) {
     const error = new Error("필수 조건을 모두 입력해주세요.");
@@ -43,7 +19,31 @@ const createGroup = async (name, description, userId) => {
   console.log("Saved Group:", savedGroup);
 };
 
-const updateOneGroup = async (id, name, description) => {
+const findAllGroupByUserId = async (userId) => {
+  const findGroups = await Group.find({ users: userId });
+
+  if (!findGroups) {
+    const error = new Error("그룹을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return findGroups;
+};
+
+const findGroupById = async (id) => {
+  const findGroup = await Group.findById(id);
+
+  if (!findGroup) {
+    const error = new Error("그룹을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return findGroup;
+};
+
+const updateGroup = async (id, name, description) => {
   if (!id) {
     const error = new Error("그룹을 찾을 수 없습니다.");
     error.statusCode = 404;
@@ -59,7 +59,7 @@ const updateOneGroup = async (id, name, description) => {
   );
 };
 
-const exitOneGroup = async (id, userId) => {
+const exitGroup = async (id, userId) => {
   const group = await Group.findById(id);
 
   if (!group) {
@@ -94,8 +94,8 @@ const exitOneGroup = async (id, userId) => {
 
 module.exports = {
   findAllGroupByUserId,
-  findOneGroup,
+  findGroupById,
   createGroup,
-  updateOneGroup,
-  exitOneGroup,
+  updateGroup,
+  exitGroup,
 };
