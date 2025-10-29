@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
-const { SALT } = require("../config/config");
 
 const bcryptHash = async (raw) => {
+  const SALT = await bcrypt.genSalt();
   return await bcrypt.hash(raw, SALT);
 };
 

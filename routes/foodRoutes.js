@@ -29,10 +29,10 @@ router.post("/create", async (req, res) => {
       description,
       expiryAt,
       userId,
-      groupId === "" ? null : groupId
+      groupId === "nothing" || groupId == "donate" ? null : groupId
     );
 
-    if (groupId === "") {
+    if (groupId === "nothing" || groupId == "donate") {
       // 빈 문자열이면 나눔 페이지에서 생성된 음식
       res.redirect("/foods");
     } else {
