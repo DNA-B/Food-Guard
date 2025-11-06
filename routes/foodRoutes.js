@@ -64,7 +64,14 @@ router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const food = await foodController.findFoodById(id);
-    res.render("foods/detail", { food: food });
+
+    console.log(food);
+
+    res.render("foods/detail", {
+      food,
+      foodAuthor: food.user.username,
+      groupName: food.group ? food.group.name : "없음",
+    });
   } catch (error) {
     res
       .status(error.statusCode || 500)

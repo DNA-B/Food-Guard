@@ -44,7 +44,9 @@ router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const post = await postController.findPostById(id);
-    res.render("posts/detail", { post: post });
+
+    console.log("post:", post);
+    res.render("posts/detail", { post: post, author: post.author.username });
   } catch (error) {
     res
       .status(error.statusCode || 500)

@@ -44,7 +44,9 @@ const findAllFoodByGroupId = async (groupId) => {
 };
 
 const findFoodById = async (id) => {
-  const findFood = await Food.findById(id);
+  const findFood = await Food.findById(id)
+    .populate("user", "username") // user.username 만
+    .populate("group", "name"); // group.name 만 (group 이 null 이면 null)
 
   if (!findFood) {
     const error = new Error("음식을 찾을 수 없습니다.");

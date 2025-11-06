@@ -31,7 +31,7 @@ const findAllPost = async () => {
 };
 
 const findPostById = async (id) => {
-  const findPost = await Post.findById(id);
+  const findPost = await Post.findById(id).populate("author", "username");
 
   if (!findPost) {
     const error = new Error("게시물을 찾을 수 없습니다.");
