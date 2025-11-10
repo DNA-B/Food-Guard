@@ -1,5 +1,23 @@
 const Group = require("../models/groupModel");
+const { Invite, INVITE_STATUS } = require("../models/inviteModel");
 const Food = require("../models/foodModel");
+
+const findAllPendingInvitesByUserId = async (userId) => {
+  const invites = await Invite.find({
+    recipient: userId,
+    status: INVITE_STATUS.PENDING,
+  })
+    .populate("sender", "username")
+    .populate("group", "name");
+
+  if (!invites) {
+    const error = new Error("초대장을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return invites;
+};
 
 const createGroup = async (name, description, userId) => {
   if (!name) {
@@ -93,6 +111,7 @@ const exitGroup = async (id, userId) => {
 };
 
 module.exports = {
+  findAllPendingInvitesByUserId,
   findAllGroupByUserId,
   findGroupById,
   createGroup,

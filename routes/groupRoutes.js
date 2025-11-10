@@ -4,6 +4,19 @@ const groupController = require("../controllers/groupController.js");
 const foodController = require("../controllers/foodController.js");
 const usersController = require("../controllers/userController.js");
 
+// get group invite page
+router.get("/invites", async (req, res) => {
+  try {
+    const userId = req.userId;
+    const invites = await groupController.findAllPendingInvitesByUserId(userId);
+    res.render("groups/invites", { invites: invites });
+  } catch (error) {
+    res
+      .status(error.statusCode || 500)
+      .render("error", { message: error.message, layout: false });
+  }
+});
+
 // get group create page
 router.get("/create", async (req, res) => {
   try {

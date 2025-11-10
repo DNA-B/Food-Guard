@@ -5,7 +5,6 @@ const authMiddleware = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    console.log("token is none");
     return res.redirect("/login");
   }
 

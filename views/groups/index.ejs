@@ -1,22 +1,28 @@
-<div class="flex flex-col items-center min-h-[60vh]">
-  <h1 class="text-3xl font-bold text-indigo-700 mb-6">그룹 목록</h1>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mb-8">
+<div class="flex flex-col items-center min-h-[60vh] py-8">
+  <h1 class="text-3xl font-bold text-indigo-700 mb-8">그룹 목록</h1>
+
+  <!-- 그룹 목록 카드 -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl mb-16">
     <% groupList.forEach(group => { %>
-    <div
-      class="bg-white shadow rounded-lg p-8 flex items-center justify-between gap-4"
-    >
-      <span class="text-xl font-semibold text-gray-800"><%= group.name %></span>
-      <a
-        href="/groups/<%= group._id %>"
-        class="px-5 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 font-semibold transition"
-        >상세보기</a
-      >
-    </div>
+      <div class="bg-white shadow-lg rounded-xl p-8 flex items-center justify-between gap-4 hover:shadow-xl transition-shadow">
+        <span class="text-xl font-semibold text-gray-800"><%= group.name %></span>
+        <a href="/groups/<%= group._id %>"
+           class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold transition">
+          상세보기
+        </a>
+      </div>
     <% }); %>
   </div>
-  <a
-    href="/groups/create"
-    class="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 font-semibold transition"
-    >그룹 생성</a
-  >
+
+  <!-- 그룹 생성 + 초대 확인 버튼 -->
+  <div class="flex gap-6">
+    <a href="/groups/create"
+       class="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition shadow-md hover:shadow-lg">
+      그룹 생성
+    </a>
+    <a href="/groups/invites"
+       class="px-8 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-semibold transition shadow-md hover:shadow-lg">
+      초대 확인
+    </a>
+  </div>
 </div>
