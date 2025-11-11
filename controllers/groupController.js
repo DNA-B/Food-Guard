@@ -2,8 +2,17 @@ const Group = require("../models/groupModel");
 const { Invite, INVITE_STATUS } = require("../models/inviteModel");
 const Food = require("../models/foodModel");
 
+const existPendingInvitesByUserId = async (userId) => {
+  const exists = await Invite.exists({
+    recipient: userId,
+    status: INVITE_STATUS.PENDING,
+  });
+
+  return exists;
+};
+
 const findAllPendingInvitesByUserId = async (userId) => {
-  const invites = await Invite.find({
+  const invites = await Invite.where({
     recipient: userId,
     status: INVITE_STATUS.PENDING,
   })
@@ -111,6 +120,7 @@ const exitGroup = async (id, userId) => {
 };
 
 module.exports = {
+  existPendingInvitesByUserId,
   findAllPendingInvitesByUserId,
   findAllGroupByUserId,
   findGroupById,

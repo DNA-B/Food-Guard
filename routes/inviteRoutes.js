@@ -47,7 +47,6 @@ router.post("/:id/accept", async (req, res) => {
 router.post("/:id/reject", async (req, res) => {
   try {
     const id = req.params.id;
-    const groupId = req.params.group_id;
     await inviteController.rejectInviteById(id);
     res.redirect(`/groups/invites`);
   } catch (error) {

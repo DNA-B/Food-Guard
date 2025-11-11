@@ -47,7 +47,12 @@ router.get("/", async (req, res) => {
   try {
     const userId = req.userId;
     const groupList = await groupController.findAllGroupByUserId(userId);
-    res.render("groups/index", { groupList: groupList });
+    const isExistInvites =
+      await groupController.existPendingInvitesByUserId(userId);
+    res.render("groups/index", {
+      groupList: groupList,
+      isExistInvites: isExistInvites,
+    });
   } catch (error) {
     res
       .status(error.statusCode || 500)
