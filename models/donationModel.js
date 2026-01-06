@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const postSchema = new Schema(
+const donationSchema = new Schema(
   {
     title: {
       type: String,
@@ -16,11 +16,21 @@ const postSchema = new Schema(
       ref: "User",
       required: true,
     },
+    food: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Food",
+      required: true,
+    },
+    isDonated: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
     // 사진
-    // 좋아요
+    // 찜
   },
   { timestamps: true }
 );
 
-const Post = mongoose.model("Post", postSchema);
-module.exports = Post;
+const Donation = mongoose.model("Donation", donationSchema);
+module.exports = Donation;

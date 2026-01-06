@@ -19,9 +19,6 @@ router.get("/create", async (req, res) => {
 // food create process
 router.post("/create", async (req, res) => {
   try {
-    // TODO
-    // user can input 'Hour'
-
     const { name, description, expiryAt, groupId } = req.body;
     const userId = req.userId;
     await foodController.createFood(

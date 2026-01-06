@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const Food = require("./foodModel");
 const Group = require("./groupModel");
+const { Invite } = require("./inviteModel");
+const Donation = require("./donationModel");
+const Post = require("./postModel");
 
 const userSchema = new Schema(
   {
@@ -18,12 +21,17 @@ userSchema.pre(
   { document: true, query: false },
   async function (next) {
     try {
-      await Food.deleteMany({ user: this._id }); // Food: 해당 User를 참조하는 모든 문서 삭제
+      await Food.deleteMany({ user: this._id });
+      await Invite.deleteMany({
+        $or: [{ sender: this._id }, { recipient: this._id }],
+      });
       await Group.updateMany(
         // Group: users 배열에서 해당 User의 _id 제거
         { users: this._id },
         { $pull: { users: this._id } }
       );
+      await Donation.deleteMany({ author: this_id });
+      await Post.deleteMany({ author: this_id });
       next();
     } catch (error) {
       console.error("Error in user delete cascade:", error);

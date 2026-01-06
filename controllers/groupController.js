@@ -108,15 +108,18 @@ const exitGroup = async (id, userId) => {
   // if last user, delete group
   if (group.users.length === 1) {
     console.log(`Delete group: ${id}`);
-    await Group.deleteOne({ _id: id });
+    await group.deleteOne();
     return;
   }
 
-  const newManager = group.users.find((user) => !user.equals(userId));
-  await Group.updateOne(
-    { _id: id },
-    { $pull: { users: userId }, $set: { manager: newManager } }
-  );
+  // new manager select
+  if (group.manager.equals(userId)) {
+    const newManager = group.users.find((user) => !user.equals(userId));
+    group.manager = newManager;
+  }
+
+  group.users.pull(userId);
+  await group.save();
 };
 
 module.exports = {
