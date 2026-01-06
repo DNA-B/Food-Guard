@@ -102,7 +102,7 @@ const exitGroup = async (id, userId) => {
     throw error;
   }
 
-  // delete group
+  // delete user's food in group
   const deleteResult = await Food.deleteMany({ user: userId, group: id });
 
   // if last user, delete group
