@@ -15,22 +15,12 @@
     <hr class="mb-6" />
     <div class="flex gap-2">
       <form action="/posts/<%= post._id %>/edit" method="GET" class="w-full">
-        <button
-          type="submit"
-          class="w-full px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-semibold transition"
-        >
+        <button type="submit" class="w-full px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-semibold transition">
           수정
         </button>
       </form>
-      <form
-        action="/posts/<%= post._id %>/?_method=DELETE"
-        method="POST"
-        class="w-full"
-      >
-        <button
-          type="submit"
-          class="w-full px-4 py-2 rounded bg-red-500 hover:bg-red-600 text-white font-semibold transition"
-        >
+      <form action="/posts/<%= post._id %>/?_method=DELETE" method="POST" class="w-full">
+        <button type="submit" class="w-full px-4 py-2 rounded bg-red-500 hover:bg-red-600 text-white font-semibold transition">
           삭제
         </button>
       </form>

@@ -1,60 +1,25 @@
 <div class="flex flex-col items-center min-h-[60vh] py-8">
   <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
     <h1 class="text-3xl font-bold text-indigo-700 mb-8">음식 수정</h1>
-    <form
-      action="/foods/<%= food._id %>/edit/?_method=PUT"
-      method="POST"
-      class="space-y-4"
-    >
+    <form action="/foods/<%= food._id %>/edit/?_method=PUT" method="POST" class="space-y-4">
       <div>
-        <label for="name" class="block text-gray-700 font-medium mb-1"
-          >이름</label
-        >
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value="<%= food.name %>"
-          required
-          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-        />
+        <label for="name" class="block text-gray-700 font-medium mb-1">이름</label>
+        <input type="text" id="name" name="name" value="<%= food.name %>" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400" />
       </div>
       <div>
-        <label for="description" class="block text-gray-700 font-medium mb-1"
-          >설명</label
-        >
-        <textarea
-          id="description"
-          name="description"
-          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-        >
-<%= food.description %></textarea
-        >
+        <label for="description" class="block text-gray-700 font-medium mb-1">설명</label>
+        <textarea id="description" name="description" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400">
+<%= food.description %></textarea>
       </div>
       <div>
-        <label for="expiryAt" class="block text-gray-700 font-medium mb-1"
-          >유통기한</label
-        >
-        <input
-          type="date"
-          id="expiryAt"
-          name="expiryAt"
-          value="<%= food.expiryAt.toISOString().split('T')[0] %>"
-          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-        />
+        <label for="expiryAt" class="block text-gray-700 font-medium mb-1">유통기한</label>
+        <input type="date" id="expiryAt" name="expiryAt" value="<%= food.expiryAt.toISOString().split('T')[0] %>" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400" />
       </div>
       <div class="flex gap-2 mt-6">
-        <button
-          type="submit"
-          class="w-full px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 font-semibold transition"
-        >
+        <button type="submit" class="w-full px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 font-semibold transition">
           수정하기
         </button>
-        <button
-          type="button"
-          onclick="history.back()"
-          class="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-semibold transition"
-        >
+        <button type="button" onclick="history.back()" class="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-semibold transition">
           취소하기
         </button>
       </div>
