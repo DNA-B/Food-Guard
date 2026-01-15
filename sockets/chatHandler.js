@@ -5,11 +5,14 @@ module.exports = (io, socket) => {
   // 1. 채팅방 입장 (Join Room)
   socket.on("join_room", async (roomId) => {
     try {
-      console.log(roomId);
       const findRoom = await ChatRoom.findById(roomId);
-      console.log(findRoom);
+
       if (!findRoom) {
         return socket.emit("error", { message: "존재하지 않는 방입니다." });
+      }
+
+      if (findRoom.isClosed) {
+        return socket.emit("error", { message: "대화가 종료된 채팅방입니다." });
       }
 
       socket.join(roomId);

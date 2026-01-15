@@ -1,26 +1,35 @@
-<div class="flex flex-col h-[85vh] max-w-2xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden my-6 border border-gray-100">
+<% if (isClosed) { %>
+<div class="flex flex-col items-center min-h-[60vh] py-8">
+  <div class="bg-white shadow-lg rounded-xl p-10 w-full max-w-xl text-center">
+    <h1 class="text-2xl font-bold text-gray-700 mb-4">대화가 종료된 채팅방입니다.</h1>
+    <p class="text-gray-600 mb-6">이 채팅방은 더 이상 사용할 수 없습니다.</p>
+    <a href="/donations" class="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 font-semibold transition">나눔 목록으로 돌아가기</a>
+  </div>
+</div>
+<% } else { %>
+<div class="flex flex-col h-[90vh] max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden my-6 border border-gray-100">
   <div class="bg-indigo-700 p-4 text-white flex justify-between items-center shadow-md">
     <div>
-      <h2 class="font-bold text-lg">나눔 채팅방</h2>
-      <p class="text-xs text-indigo-200">매너 있는 대화를 부탁드려요!</p>
+      <h2 class="font-bold text-xl">나눔 채팅방</h2>
+      <p class="text-sm text-indigo-200">매너 있는 대화를 부탁드려요!</p>
     </div>
 
     <div class="flex gap-2">
       <% if (isAuthor) { %>
       <form action="/donations/<%= donationId %>/chats/<%= roomId %>/complete?_method=PUT" method="POST" onsubmit="return confirm('정말로 나눔을 완료하시겠습니까?\n완료 후에는 채팅이 종료됩니다.')">
-        <button type="submit" class="text-xs bg-green-500 px-3 py-1 rounded-lg hover:bg-green-600 transition font-semibold">
+        <button type="submit" class="text-sm bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600 transition font-semibold">
           나눔 완료
         </button>
       </form>
       <% } %>
-      <a href="/donations" class="text-sm bg-indigo-800 px-3 py-1 rounded-lg hover:bg-indigo-900 transition">목록</a>
+      <a href="/donations" class="text-sm bg-indigo-800 px-4 py-2 rounded-lg hover:bg-indigo-900 transition">목록</a>
     </div>
   </div>
 
   <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50">
     <% messages.forEach(msg => { %>
     <div class="flex <%= msg.sender._id.toString() === userId.toString() ? 'justify-end' : 'justify-start' %>">
-      <div class="max-w-[75%]">
+      <div class="max-w-[80%]">
         <% if (msg.sender._id.toString() !== userId.toString()) { %>
         <span class="text-[11px] text-gray-500 ml-1 mb-1 block"><%= msg.sender.nickname %></span>
         <% } %>
@@ -43,6 +52,7 @@
     </form>
   </div>
 </div>
+<% } %>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>

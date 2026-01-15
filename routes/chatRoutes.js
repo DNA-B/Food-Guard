@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 const chatController = require("../controllers/chatController.js");
 const donationController = require("../controllers/donationController.js");
-
+const ChatRoom = require("../models/chatRoomModel.js");
 // create Chat
 router.post("/", async (req, res) => {
   try {
@@ -24,6 +24,7 @@ router.get("/:room_id", async (req, res) => {
     const findDonation = await donationController.findDonationById(donationId);
     const isAuthor = req.userId === findDonation.author._id.toString();
     const findMessages = await chatController.findMessagesByRoomId(roomId);
+    const findRoom = await ChatRoom.findById(roomId);
 
     res.render("donations/chats/room", {
       donationId: donationId,
@@ -31,6 +32,7 @@ router.get("/:room_id", async (req, res) => {
       messages: findMessages,
       userId: req.userId,
       isAuthor: isAuthor,
+      isClosed: findRoom.isClosed,
     });
   } catch (error) {
     res
@@ -39,6 +41,7 @@ router.get("/:room_id", async (req, res) => {
   }
 });
 
+// end chat process
 router.put("/:id/complete", async (req, res) => {
   try {
     const { donation_id, id } = req.params;
