@@ -37,12 +37,19 @@
     </div>
     <% } else { %>
     <div class="flex gap-2">
-      <form action="/donations/<%= donation._id %>/chat" method="POST" class="w-full">
-        <button type="submit" class="w-full px-4 py-2 rounded bg-red-500 hover:bg-red-600 text-white font-semibold transition">
-          채팅하기
-        </button>
-      </form>
+      <button type="button" onclick="confirmAndChat()" class="w-full px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition">
+        채팅하기
+      </button>
     </div>
+    <form id="startChatForm" action="/donations/<%= donation._id %>/chats" method="POST" style="display: none;"></form>
     <% } %>
   </div>
 </div>
+
+<script>
+  function confirmAndChat() {
+    if (confirm("작성자와 채팅을 시작하시겠습니까?")) {
+      document.getElementById('startChatForm').submit();
+    }
+  }
+</script>

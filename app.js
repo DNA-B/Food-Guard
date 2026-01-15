@@ -1,17 +1,23 @@
+// library
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
 const methodOverride = require("method-override");
 const cookieParser = require("cookie-parser");
 
-const app = express();
+// config
+const { createServer } = require("node:http");
 const { PORT } = require("./config/config");
+const setupSocket = require("./config/socket.js");
 
 const logger = require("./middleware/logger.js");
 const indexRouter = require("./routes/indexRoutes.js");
 
 // DB Connecting
 require("./config/db.js");
+
+const app = express();
+const server = createServer(app);
 
 // middleware
 app.use(express.json());
@@ -37,6 +43,7 @@ app.use(logger);
 app.use(indexRouter);
 
 // Listening
-app.listen(PORT, () => {
+setupSocket(server, app);
+server.listen(PORT, () => {
   console.log(`Example app listening on port: ${PORT}`);
 });

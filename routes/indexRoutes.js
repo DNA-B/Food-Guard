@@ -9,6 +9,7 @@ const foodRouter = require("./foodRoutes.js");
 const groupRouter = require("./groupRoutes.js");
 const inviteRouter = require("./inviteRoutes.js");
 const donationRouter = require("./donationRoutes.js");
+const chatRouter = require("./chatRoutes.js");
 const postRouter = require("./postRoutes.js");
 
 router.get("/", (req, res) => {
@@ -25,6 +26,7 @@ router.use("/foods", authMiddleware, foodRouter);
 router.use("/groups", authMiddleware, groupRouter);
 router.use("/groups/:group_id/invites", authMiddleware, inviteRouter);
 router.use("/donations", authMiddleware, donationRouter);
+router.use("/donations/:donation_id/chats", authMiddleware, chatRouter);
 router.use("/posts", authMiddleware, postRouter);
 
 module.exports = router;

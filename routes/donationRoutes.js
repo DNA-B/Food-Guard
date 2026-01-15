@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const donationController = require("../controllers/donationController.js");
+const chatController = require("../controllers/chatController.js");
 const foodController = require("../controllers/foodController.js");
 
 // get create donation page
@@ -22,6 +23,19 @@ router.post("/create", async (req, res) => {
     const userId = req.userId;
     await donationController.createDonation(title, content, foodId, userId);
     res.redirect("/donations");
+  } catch (error) {
+    res
+      .status(error.statusCode || 500)
+      .render("error", { message: error.message, layout: false });
+  }
+});
+
+// get chat list page
+router.get("/chatList", async (req, res) => {
+  try {
+    const userId = req.userId;
+    const findChatRooms = await chatController.findAllRoomsByUserId(userId);
+    res.render("donations/chats", { userId: userId, chatRooms: findChatRooms });
   } catch (error) {
     res
       .status(error.statusCode || 500)

@@ -1,0 +1,90 @@
+<div class="flex flex-col h-[85vh] max-w-2xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden my-6 border border-gray-100">
+  <div class="bg-indigo-700 p-4 text-white flex justify-between items-center shadow-md">
+    <div>
+      <h2 class="font-bold text-lg">나눔 채팅방</h2>
+      <p class="text-xs text-indigo-200">매너 있는 대화를 부탁드려요!</p>
+    </div>
+
+    <div class="flex gap-2">
+      <% if (isAuthor) { %>
+      <form action="/donations/<%= donationId %>/chats/<%= roomId %>/complete?_method=PUT" method="POST" onsubmit="return confirm('정말로 나눔을 완료하시겠습니까?\n완료 후에는 채팅이 종료됩니다.')">
+        <button type="submit" class="text-xs bg-green-500 px-3 py-1 rounded-lg hover:bg-green-600 transition font-semibold">
+          나눔 완료
+        </button>
+      </form>
+      <% } %>
+      <a href="/donations" class="text-sm bg-indigo-800 px-3 py-1 rounded-lg hover:bg-indigo-900 transition">목록</a>
+    </div>
+  </div>
+
+  <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50">
+    <% messages.forEach(msg => { %>
+    <div class="flex <%= msg.sender._id.toString() === userId.toString() ? 'justify-end' : 'justify-start' %>">
+      <div class="max-w-[75%]">
+        <% if (msg.sender._id.toString() !== userId.toString()) { %>
+        <span class="text-[11px] text-gray-500 ml-1 mb-1 block"><%= msg.sender.nickname %></span>
+        <% } %>
+        <div class="px-4 py-2.5 rounded-2xl text-sm shadow-sm <%= msg.sender._id.toString() === userId.toString() ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white text-gray-800 border border-gray-200 rounded-tl-none' %>">
+          <%= msg.content %>
+        </div>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+
+  <div class="p-4 bg-white border-t border-gray-100">
+    <form id="chat-form" class="flex items-center gap-3">
+      <input type="text" id="message-input" placeholder="메시지를 입력하세요..." class="flex-1 bg-gray-100 border-none rounded-full px-5 py-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white transition" autocomplete="off">
+      <button type="submit" class="bg-indigo-600 p-3 rounded-full text-white hover:bg-indigo-700 shadow-lg hover:scale-105 transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current" viewBox="0 0 20 20">
+          <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const roomId = "<%= roomId %>";
+  const userId = "<%= userId %>";
+  const chatBox = document.getElementById('chat-box');
+
+  // 1. 방 입장
+  socket.emit('join_room', roomId);
+
+  // 2. 메시지 전송
+  document.getElementById('chat-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('message-input');
+    if (!input.value.trim()) return;
+
+    socket.emit('send_message', {
+      room: roomId,
+      sender: userId,
+      content: input.value
+    });
+    input.value = '';
+  });
+
+  // 3. 메시지 수신 시 DOM 추가
+  socket.on('receive_message', (msg) => {
+    const isMe = msg.sender._id === userId;
+    const msgHtml = `
+      <div class="flex ${isMe ? 'justify-end' : 'justify-start'} animate-fade-in">
+        <div class="max-w-[75%]">
+          ${!isMe ? `<span class="text-[11px] text-gray-500 ml-1 mb-1 block">${msg.sender.nickname}</span>` : ''}
+          <div class="px-4 py-2.5 rounded-2xl text-sm shadow-sm ${isMe ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white text-gray-800 border border-gray-200 rounded-tl-none'}">
+            ${msg.content}
+          </div>
+        </div>
+      </div>
+    `;
+    chatBox.insertAdjacentHTML('beforeend', msgHtml);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+
+  // 초기 스크롤 하단 고정
+  chatBox.scrollTop = chatBox.scrollHeight;
+</script>
