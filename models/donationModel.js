@@ -21,11 +21,6 @@ const donationSchema = new Schema(
       ref: "Food",
       required: true,
     },
-    isDonated: {
-      type: Boolean,
-      default: false,
-      required: true,
-    },
     // 사진
     // 찜
   },

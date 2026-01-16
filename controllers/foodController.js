@@ -20,7 +20,11 @@ const createFood = async (name, description, expiryAt, userId, groupId) => {
 };
 
 const findAllFoodByUserId = async (userId) => {
-  const findFoods = await Food.find({ user: userId });
+  const findFoods = await Food.find({
+    user: userId,
+    isEated: false,
+    isDonated: false,
+  });
 
   if (!findFoods) {
     const error = new Error("음식을 찾을 수 없습니다.");
@@ -32,7 +36,11 @@ const findAllFoodByUserId = async (userId) => {
 };
 
 const findAllFoodByGroupId = async (groupId) => {
-  const findFoods = await Food.find({ group: groupId });
+  const findFoods = await Food.find({
+    group: groupId,
+    isEated: false,
+    isDonated: false,
+  });
 
   if (!findFoods) {
     const error = new Error("음식을 찾을 수 없습니다.");
@@ -75,6 +83,19 @@ const updateFood = async (id, name, description, expiryAt) => {
   );
 };
 
+const eatFood = async (id) => {
+  const food = await Food.findById(id);
+
+  if (!food) {
+    const error = new Error("음식을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  food.isEated = true;
+  await food.save();
+};
+
 const deleteFood = async (id) => {
   const food = await Food.findById(id);
 
@@ -93,5 +114,6 @@ module.exports = {
   findAllFoodByGroupId,
   findFoodById,
   updateFood,
+  eatFood,
   deleteFood,
 };

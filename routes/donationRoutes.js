@@ -8,7 +8,9 @@ const foodController = require("../controllers/foodController.js");
 router.get("/create", async (req, res) => {
   try {
     const foods = await foodController.findAllFoodByUserId(req.userId);
-    res.render("donations/create", { foods: foods });
+    res.render("donations/create", {
+      foods: foods.filter((food) => food.isDonated === false),
+    });
   } catch (error) {
     res
       .status(error.statusCode || 500)

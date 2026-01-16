@@ -19,9 +19,7 @@
       <div>
         <label for="groupId" class="block text-gray-700 font-medium mb-2">그룹 선택</label>
         <select id="groupId" name="groupId" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg">
-          <option disabled>그룹을 선택하세요</option>
-          <option value="nothing">선택 안 함</option>
-          <option value="donate">나눔</option>
+          <option value="nothing" selected hidden>그룹을 선택하세요</option>
           <% if (Array.isArray(groups) !== 'undefined' && groups.length > 0) { %>
           <% groups.forEach(function(group) { %>
           <option value="<%= group._id %>" <%= (typeof groupId !== 'undefined' && groupId === group._id.toString()) ? 'selected' : '' %>><%= group.name %>

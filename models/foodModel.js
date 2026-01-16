@@ -24,6 +24,14 @@ const foodSchema = new Schema(
       ref: "Group",
       default: null,
     },
+    isEated: {
+      type: Boolean,
+      default: false,
+    },
+    isDonated: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

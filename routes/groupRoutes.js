@@ -112,8 +112,9 @@ router.put("/:id/edit", async (req, res) => {
 router.get("/:id/foods", async (req, res) => {
   try {
     const id = req.params.id;
+    const findGroup = await groupController.findGroupById(id);
     const foods = await foodController.findAllFoodByGroupId(id);
-    res.render("groups/foods", { foodList: foods });
+    res.render("groups/foods", { groupName: findGroup.name, foodList: foods });
   } catch (error) {
     res
       .status(error.statusCode || 500)

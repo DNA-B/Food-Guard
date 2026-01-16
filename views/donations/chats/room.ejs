@@ -16,7 +16,7 @@
 
     <div class="flex gap-2">
       <% if (isAuthor) { %>
-      <form action="/donations/<%= donationId %>/chats/<%= roomId %>/complete?_method=PUT" method="POST" onsubmit="return confirm('정말로 나눔을 완료하시겠습니까?\n완료 후에는 채팅이 종료됩니다.')">
+      <form id="end-donation" action="/donations/<%= donationId %>/chats/<%= roomId %>/complete?_method=PUT" method="POST">
         <button type="submit" class="text-sm bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600 transition font-semibold">
           나눔 완료
         </button>
@@ -94,6 +94,14 @@
     chatBox.insertAdjacentHTML('beforeend', msgHtml);
     chatBox.scrollTop = chatBox.scrollHeight;
   });
+
+  // 4. 나눔 종료
+  document.getElementById("end-donation").addEventListener('submit', (e) => {
+    confirm('정말로 나눔을 완료하시겠습니까?\n완료 후에는 채팅이 종료됩니다.');
+    socket.emit("disconnect", {
+      "room": roomId,
+    })
+  })
 
   // 초기 스크롤 하단 고정
   chatBox.scrollTop = chatBox.scrollHeight;

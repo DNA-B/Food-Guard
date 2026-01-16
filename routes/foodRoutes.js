@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const foodController = require("../controllers/foodController.js");
+const userController = require("../controllers/userController.js");
 const groupController = require("../controllers/groupController.js");
 
 // get food create page
@@ -21,16 +22,17 @@ router.post("/create", async (req, res) => {
   try {
     const { name, description, expiryAt, groupId } = req.body;
     const userId = req.userId;
+
     await foodController.createFood(
       name,
       description,
       expiryAt,
       userId,
-      groupId === "nothing" || groupId == "donate" ? null : groupId
+      groupId === "nothing" ? null : groupId
     );
 
-    if (groupId === "nothing" || groupId == "donate") {
-      // 빈 문자열이면 나눔 페이지에서 생성된 음식
+    if (groupId === "nothing") {
+      // 그룹 선택 안했으면 나눔 페이지에서 생성된 음식
       res.redirect("/foods");
     } else {
       res.redirect(`/groups/${groupId}/foods`);
@@ -46,8 +48,12 @@ router.post("/create", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const userId = req.userId;
+    const findUser = await userController.findUserById(userId);
     const foodList = await foodController.findAllFoodByUserId(userId);
-    res.render("foods/index", { foodList: foodList });
+    res.render("foods/index", {
+      nickname: findUser.nickname,
+      foodList: foodList,
+    });
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -60,13 +66,12 @@ router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const food = await foodController.findFoodById(id);
-
-    console.log(food);
-
+    const isOwner = req.userId === food.user._id.toString();
     res.render("foods/detail", {
       food,
       foodAuthor: food.user.username,
       groupName: food.group ? food.group.name : "없음",
+      isOwner: isOwner,
     });
   } catch (error) {
     res
@@ -103,6 +108,26 @@ router.put("/:id/edit", async (req, res) => {
     const { name, description, expiryAt } = req.body;
     await foodController.updateFood(id, name, description, expiryAt);
     res.redirect(`/foods/${id}`);
+  } catch (error) {
+    res
+      .status(error.statusCode || 500)
+      .render("error", { message: error.message, layout: false });
+  }
+});
+
+router.put("/:id/eat", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const food = await foodController.findFoodById(id);
+
+    if (!food) {
+      res
+        .status(404)
+        .render("error", { message: "음식을 찾을 수 없습니다", layout: false });
+    }
+
+    await foodController.eatFood(id);
+    res.redirect("/foods");
   } catch (error) {
     res
       .status(error.statusCode || 500)

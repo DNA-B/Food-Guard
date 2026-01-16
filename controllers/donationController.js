@@ -20,7 +20,9 @@ const createDonation = async (title, content, foodId, userId) => {
 };
 
 const findAllDonation = async () => {
-  const findDonations = await Donation.find({ isDonated: false });
+  const findDonations = (
+    await Donation.find().populate("food", "isDonated")
+  ).filter((food) => food.isDonated === false);
 
   if (!findDonations) {
     const error = new Error("나눔을 찾을 수 없습니다.");

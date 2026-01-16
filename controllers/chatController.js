@@ -71,12 +71,11 @@ const closeChatRoom = async (donationId, roomId) => {
 
   findChatRoom.isClosed = true;
   findDonation.food.group = null;
-  findDonation.isDonated = true;
+  findDonation.food.isDonated = true;
 
   await findChatRoom.save();
   await findDonation.food.save();
   await findDonation.save();
-  console.log(`ChatRoom ${roomId} has been closed.`);
 };
 
 module.exports = {
