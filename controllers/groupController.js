@@ -7,8 +7,7 @@ const existPendingInvitesByUserId = async (userId) => {
     recipient: userId,
     status: INVITE_STATUS.PENDING,
   });
-
-  return exists;
+  return !!exists;
 };
 
 const findAllPendingInvitesByUserId = async (userId) => {
@@ -42,48 +41,45 @@ const createGroup = async (name, description, userId) => {
     users: [userId],
   });
 
-  const savedGroup = await newGroup.save();
-  console.log("Saved Group:", savedGroup);
+  await newGroup.save();
 };
 
 const findAllGroupByUserId = async (userId) => {
-  const findGroups = await Group.find({ users: userId });
+  const groups = await Group.find({ users: userId });
 
-  if (!findGroups) {
+  if (!groups) {
     const error = new Error("그룹을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findGroups;
+  return groups;
 };
 
 const findGroupById = async (id) => {
-  const findGroup = await Group.findById(id);
+  const group = await Group.findById(id);
 
-  if (!findGroup) {
+  if (!group) {
     const error = new Error("그룹을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findGroup;
+  return group;
 };
 
 const updateGroup = async (id, name, description) => {
-  if (!id) {
+  const group = await Group.findById(id);
+
+  if (!group) {
     const error = new Error("그룹을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  await Group.updateOne(
-    { _id: id },
-    {
-      name: name,
-      description: description,
-    }
-  );
+  group.name = name;
+  group.description = description;
+  await group.save();
 };
 
 const exitGroup = async (id, userId) => {
@@ -104,6 +100,7 @@ const exitGroup = async (id, userId) => {
 
   // delete user's food in group
   const deleteResult = await Food.deleteMany({ user: userId, group: id });
+  console.log(deleteResult);
 
   // if last user, delete group
   if (group.users.length === 1) {

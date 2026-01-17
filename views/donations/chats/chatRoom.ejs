@@ -16,7 +16,7 @@
 
     <div class="flex gap-2">
       <% if (isAuthor) { %>
-      <form id="end-donation" action="/donations/<%= donationId %>/chats/<%= roomId %>/complete?_method=PUT" method="POST">
+      <form id="end-donation" action="/donations/<%= donationId %>/chats/<%= chatRoomId %>/complete?_method=PUT" method="POST">
         <button type="submit" class="text-sm bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600 transition font-semibold">
           나눔 완료
         </button>
@@ -57,12 +57,12 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io();
-  const roomId = "<%= roomId %>";
+  const chatRoomId = "<%= chatRoomId %>";
   const userId = "<%= userId %>";
   const chatBox = document.getElementById('chat-box');
 
   // 1. 방 입장
-  socket.emit('join_room', roomId);
+  socket.emit('join_chat_room', chatRoomId);
 
   // 2. 메시지 전송
   document.getElementById('chat-form').addEventListener('submit', (e) => {
@@ -71,7 +71,7 @@
     if (!input.value.trim()) return;
 
     socket.emit('send_message', {
-      room: roomId,
+      chatRoom: chatRoomId,
       sender: userId,
       content: input.value
     });
@@ -99,7 +99,7 @@
   document.getElementById("end-donation").addEventListener('submit', (e) => {
     confirm('정말로 나눔을 완료하시겠습니까?\n완료 후에는 채팅이 종료됩니다.');
     socket.emit("disconnect", {
-      "room": roomId,
+      "chatRoom": chatRoomId,
     })
   })
 

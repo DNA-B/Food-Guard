@@ -21,7 +21,7 @@ const chatRoomSchema = new Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const ChatRoom = mongoose.model("ChatRoom", chatRoomSchema);

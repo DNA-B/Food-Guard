@@ -30,11 +30,10 @@ router.post("/create", async (req, res) => {
 });
 
 // invite accept process
-router.post("/:id/accept", async (req, res) => {
+router.post("/:invite_id/accept", async (req, res) => {
   try {
-    const id = req.params.id;
-    const groupId = req.params.group_id;
-    await inviteController.acceptInviteById(id, groupId);
+    const { group_id: groupId, invite_id: inviteId } = req.params;
+    await inviteController.acceptInviteById(groupId, inviteId);
     res.redirect(`/groups/invites`);
   } catch (error) {
     res
@@ -44,10 +43,10 @@ router.post("/:id/accept", async (req, res) => {
 });
 
 // invite reject process
-router.post("/:id/reject", async (req, res) => {
+router.post("/:invite_id/reject", async (req, res) => {
   try {
-    const id = req.params.id;
-    await inviteController.rejectInviteById(id);
+    const inviteId = req.params.invite_id;
+    await inviteController.rejectInviteById(inviteId);
     res.redirect(`/groups/invites`);
   } catch (error) {
     res
@@ -55,37 +54,5 @@ router.post("/:id/reject", async (req, res) => {
       .render("error", { message: error.message, layout: false });
   }
 });
-
-// // find all invite
-// router.get("/", async (req, res) => {
-//   try {
-//     const userId = req.userId;
-//     const groupId = req.params.group_id;
-//     const inviteList = await inviteController.findAllInviteById(userId);
-//     res.render("groups/invites/index", { inviteList, groupId });
-//   } catch (error) {
-//     res
-//       .status(error.statusCode || 500)
-//       .render("error", { message: error.message, layout: false });
-//   }
-// });
-
-// // find one invite
-// router.get("/:id", async (req, res) => {
-//   try {
-//     const id = req.params.id;
-//     const invite = await inviteController.acceptInviteById(id);
-
-//     console.log("invite:", invite);
-//     res.render("invites/detail", {
-//       invite: invite,
-//       author: invite.author.username,
-//     });
-//   } catch (error) {
-//     res
-//       .status(error.statusCode || 500)
-//       .render("error", { message: error.message, layout: false });
-//   }
-// });
 
 module.exports = router;

@@ -24,7 +24,7 @@ const foodSchema = new Schema(
       ref: "Group",
       default: null,
     },
-    isEated: {
+    isConsumed: {
       type: Boolean,
       default: false,
     },
@@ -33,7 +33,7 @@ const foodSchema = new Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Food = mongoose.model("Food", foodSchema);

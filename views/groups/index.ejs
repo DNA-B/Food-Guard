@@ -3,7 +3,7 @@
 
   <!-- 그룹 목록 카드 -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl mb-16">
-    <% groupList.forEach(group => { %>
+    <% groups.forEach(group => { %>
     <div class="bg-white shadow-lg rounded-xl p-8 flex flex-col gap-4 hover:shadow-xl transition-shadow">
       <span class="text-xl font-semibold text-gray-800"><%= group.name %></span>
       <span class="text-gray-500"><%= group.description.substr(0, 10) %></span>

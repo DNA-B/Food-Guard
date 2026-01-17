@@ -15,72 +15,68 @@ const createFood = async (name, description, expiryAt, userId, groupId) => {
     group: groupId,
   });
 
-  const savedFood = await newFood.save();
-  console.log("Saved Food:", savedFood);
+  await newFood.save();
 };
 
 const findAllFoodByUserId = async (userId) => {
-  const findFoods = await Food.find({
+  const foods = await Food.find({
     user: userId,
-    isEated: false,
+    isConsumed: false,
     isDonated: false,
   });
 
-  if (!findFoods) {
+  if (!foods) {
     const error = new Error("음식을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findFoods;
+  return foods;
 };
 
 const findAllFoodByGroupId = async (groupId) => {
-  const findFoods = await Food.find({
+  const foods = await Food.find({
     group: groupId,
-    isEated: false,
+    isConsumed: false,
     isDonated: false,
   });
 
-  if (!findFoods) {
+  if (!foods) {
     const error = new Error("음식을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findFoods;
+  return foods;
 };
 
 const findFoodById = async (id) => {
-  const findFood = await Food.findById(id)
+  const food = await Food.findById(id)
     .populate("user", "username") // user.username 만
     .populate("group", "name"); // group.name 만 (group 이 null 이면 null)
 
-  if (!findFood) {
+  if (!food) {
     const error = new Error("음식을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findFood;
+  return food;
 };
 
 const updateFood = async (id, name, description, expiryAt) => {
-  if (!id) {
+  const food = await Food.findById(id);
+
+  if (!food) {
     const error = new Error("음식을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  await Food.updateOne(
-    { _id: id }, // filter
-    {
-      // update field
-      name: name,
-      description: description,
-      expiryAt: expiryAt,
-    }
-  );
+  food.name = name;
+  food.description = description;
+  food.expiryAt = expiryAt;
+  await food.save();
 };
 
 const eatFood = async (id) => {
@@ -92,7 +88,7 @@ const eatFood = async (id) => {
     throw error;
   }
 
-  food.isEated = true;
+  food.isConsumed = true;
   await food.save();
 };
 
@@ -105,7 +101,7 @@ const deleteFood = async (id) => {
     throw error;
   }
 
-  await Food.deleteOne({ _id: id });
+  await food.deleteOne();
 };
 
 module.exports = {

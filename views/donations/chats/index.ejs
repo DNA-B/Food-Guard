@@ -2,26 +2,26 @@
   <h1 class="text-3xl font-bold text-indigo-700 mb-8">내 채팅 목록</h1>
 
   <div class="w-full max-w-4xl space-y-4">
-    <% chatRooms.filter(room => !room.isClosed).forEach(room => { %>
+    <% chatRooms.filter(chatRoom => !chatRoom.isClosed).forEach(chatRoom => { %>
     <div class="bg-white shadow rounded-lg p-6 flex items-center justify-between border border-gray-100 hover:border-indigo-300 transition-colors">
       <div class="flex flex-col gap-1">
         <div class="flex items-center gap-2">
           <span class="text-lg font-bold text-gray-800">
-            <%= room.donation.title %>
+            <%= chatRoom.donation.title %>
           </span>
         </div>
 
         <p class="text-sm text-gray-600">
-          <% const partner = room.users.find(u => u._id.toString() !== userId.toString()); %>
+          <% const partner = chatRoom.users.find(u => u._id.toString() !== userId.toString()); %>
           대화 상대: <%= partner.nickname %>
         </p>
 
         <span class="text-[11px] text-gray-400 mt-1">
-          최근 활동: <%= new Date(room.updatedAt).toLocaleString() %>
+          최근 활동: <%= new Date(chatRoom.updatedAt).toLocaleString() %>
         </span>
       </div>
 
-      <a href="/donations/<%= room.donation._id %>/chats/<%= room._id %>" class="px-5 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-semibold transition shadow-sm">
+      <a href="/donations/<%= chatRoom.donation._id %>/chats/<%= chatRoom._id %>" class="px-5 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-semibold transition shadow-sm">
         입장하기
       </a>
     </div>

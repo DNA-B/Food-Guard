@@ -46,11 +46,11 @@ router.post("/create", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const userId = req.userId;
-    const groupList = await groupController.findAllGroupByUserId(userId);
+    const groups = await groupController.findAllGroupByUserId(userId);
     const isExistInvites =
       await groupController.existPendingInvitesByUserId(userId);
     res.render("groups/index", {
-      groupList: groupList,
+      groups: groups,
       isExistInvites: isExistInvites,
     });
   } catch (error) {
@@ -112,9 +112,9 @@ router.put("/:id/edit", async (req, res) => {
 router.get("/:id/foods", async (req, res) => {
   try {
     const id = req.params.id;
-    const findGroup = await groupController.findGroupById(id);
+    const group = await groupController.findGroupById(id);
     const foods = await foodController.findAllFoodByGroupId(id);
-    res.render("groups/foods", { groupName: findGroup.name, foodList: foods });
+    res.render("groups/foods", { groupName: group.name, foods: foods });
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -128,7 +128,7 @@ router.get("/:id/users", async (req, res) => {
     const id = req.params.id;
     const result = await usersController.findAllUsersByGroupId(id);
     res.render("groups/users", {
-      userList: result.users,
+      users: result.users,
       managerId: result.managerId,
     });
   } catch (error) {

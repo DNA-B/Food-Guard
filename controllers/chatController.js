@@ -2,84 +2,80 @@ const ChatRoom = require("../models/chatRoomModel.js");
 const Chat = require("../models/chatModel.js");
 const Donation = require("../models/donationModel.js");
 
-// create chat room
-const createChat = async (donationId, userId) => {
-  const findDonation = await Donation.findById(donationId).populate(
-    "author",
-    "_id"
-  );
+// create chat chatRoom
+const createChatRoom = async (donationId, userId) => {
+  const donation = await Donation.findById(donationId);
 
-  if (!findDonation) {
+  if (!donation) {
     const error = new Error("해당 나눔 게시글을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  let room = await ChatRoom.findOne({
-    donation: findDonation,
-    users: { $all: [findDonation.author, userId] },
+  const chatRooms = await ChatRoom.findOne({
+    donation: donationId,
+    users: { $all: [donation.author, userId] },
   });
 
-  if (!room) {
-    room = new ChatRoom({
+  if (!chatRooms) {
+    const newChatRoom = new ChatRoom({
       donation: donationId,
-      users: [findDonation.author, userId],
+      users: [donation.author, userId],
     });
-    await room.save();
+    await newChatRoom.save();
+    return newChatRoom;
   }
 
-  return room;
+  return chatRooms;
 };
 
-const findMessagesByRoomId = async (roomId) => {
-  const findChats = await Chat.find({ room: roomId })
-    .populate("sender")
-    .sort({ createdAt: 1 }); // 생성 날짜 오름차순
+const findMessagesByRoomId = async (chatRoomId) => {
+  const chats = await Chat.find({ chatRoom: chatRoomId }).populate("sender");
 
-  if (!findChats) {
+  if (!chats) {
     const error = new Error("채팅 내역을 불러올 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findChats;
+  return chats;
 };
 
 const findAllRoomsByUserId = async (userId) => {
-  const findRooms = await ChatRoom.find({ users: userId })
+  const chatRooms = await ChatRoom.find({ users: userId })
     .populate("users")
     .populate("donation", "title");
-  return findRooms;
+  return chatRooms;
 };
 
-const closeChatRoom = async (donationId, roomId) => {
-  const findChatRoom = await ChatRoom.findById(roomId);
+const closeChatRoom = async (donationId, chatRoomId) => {
+  const chatRoom = await ChatRoom.findById(chatRoomId);
 
-  if (!findChatRoom) {
+  if (!chatRoom) {
     const error = new Error("채팅방을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  const findDonation = await Donation.findById(donationId).populate("food");
+  const donation = await Donation.findById(donationId).populate("food");
 
-  if (!findDonation) {
+  if (!donation) {
     const error = new Error("기부 내역을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  findChatRoom.isClosed = true;
-  findDonation.food.group = null;
-  findDonation.food.isDonated = true;
+  chatRoom.isClosed = true;
+  await chatRoom.save();
 
-  await findChatRoom.save();
-  await findDonation.food.save();
-  await findDonation.save();
+  donation.food.group = null;
+  donation.food.isDonated = true;
+  await donation.food.save();
+  await donation.save();
 };
 
 module.exports = {
-  createChat,
+  createChatRoom,
   findMessagesByRoomId,
   findAllRoomsByUserId,
   closeChatRoom,

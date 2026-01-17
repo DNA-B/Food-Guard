@@ -30,8 +30,8 @@ router.post("/create", async (req, res) => {
 // find all post
 router.get("/", async (req, res) => {
   try {
-    const postList = await postController.findAllPost();
-    res.render("posts/index", { postList });
+    const posts = await postController.findAllPost();
+    res.render("posts/", { posts });
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -44,7 +44,7 @@ router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const post = await postController.findPostById(id);
-    const isAuthor = req.userId === post.author._id.toString();
+    const isAuthor = post.author._id.equals(req.userId);
     res.render("posts/detail", {
       post: post,
       author: post.author.username,

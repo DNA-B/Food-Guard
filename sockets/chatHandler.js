@@ -3,9 +3,9 @@ const ChatRoom = require("../models/chatRoomModel.js");
 
 module.exports = (io, socket) => {
   // 1. 채팅방 입장
-  socket.on("join_room", async (roomId) => {
+  socket.on("join_chat_room", async (chatRoomId) => {
     try {
-      const findRoom = await ChatRoom.findById(roomId);
+      const findRoom = await ChatRoom.findById(chatRoomId);
 
       if (!findRoom) {
         return socket.emit("error", { message: "존재하지 않는 방입니다." });
@@ -15,8 +15,8 @@ module.exports = (io, socket) => {
         return socket.emit("error", { message: "대화가 종료된 채팅방입니다." });
       }
 
-      socket.join(roomId);
-      console.log(`[Socket] 유저(${socket.id})가 방(${roomId})에 입장함`);
+      socket.join(chatRoomId);
+      console.log(`[Socket] 유저(${socket.id})가 방(${chatRoomId})에 입장함`);
     } catch (error) {
       console.error("Join Room Error:", error);
     }
@@ -25,10 +25,10 @@ module.exports = (io, socket) => {
   // 2. 메시지 전송
   socket.on("send_message", async (data) => {
     try {
-      const { room, sender, content } = data;
+      const { chatRoom, sender, content } = data;
 
       const newMessage = new Chat({
-        room,
+        chatRoom,
         sender,
         content,
       });
@@ -37,10 +37,10 @@ module.exports = (io, socket) => {
 
       const fullMessage = await Chat.findById(newMessage._id).populate(
         "sender",
-        "nickname"
+        "nickname",
       );
 
-      io.to(room).emit("receive_message", fullMessage);
+      io.to(chatRoom).emit("receive_message", fullMessage);
     } catch (error) {
       console.error("Message Send Error:", error);
       socket.emit("error", { message: "메시지 전송에 실패했습니다." });
@@ -50,13 +50,13 @@ module.exports = (io, socket) => {
   // 3. 나눔 완료
   socket.on("disconnect", async (data) => {
     try {
-      const { room } = data;
-      console.log(`[Socket] 유저(${socket.id})가 방(${room})에서 나감`);
+      const { chatRoom } = data;
+      console.log(`[Socket] 유저(${socket.id})가 방(${chatRoom})에서 나감`);
     } catch (error) {}
   });
 
   // // 4. 타이핑 상태 알림
   // socket.on("typing", (data) => {
-  //   socket.to(data.room).emit("display_typing", { user: data.user });
+  //   socket.to(data.chatRoom).emit("display_typing", { user: data.user });
   // });
 };

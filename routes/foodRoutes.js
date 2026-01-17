@@ -28,7 +28,7 @@ router.post("/create", async (req, res) => {
       description,
       expiryAt,
       userId,
-      groupId === "nothing" ? null : groupId
+      groupId === "nothing" ? null : groupId,
     );
 
     if (groupId === "nothing") {
@@ -49,10 +49,10 @@ router.get("/", async (req, res) => {
   try {
     const userId = req.userId;
     const findUser = await userController.findUserById(userId);
-    const foodList = await foodController.findAllFoodByUserId(userId);
+    const foods = await foodController.findAllFoodByUserId(userId);
     res.render("foods/index", {
       nickname: findUser.nickname,
-      foodList: foodList,
+      foods: foods,
     });
   } catch (error) {
     res
@@ -66,7 +66,7 @@ router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const food = await foodController.findFoodById(id);
-    const isOwner = req.userId === food.user._id.toString();
+    const isOwner = food.user._id.equals(req.userId);
     res.render("foods/detail", {
       food,
       foodAuthor: food.user.username,

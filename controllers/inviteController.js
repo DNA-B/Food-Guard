@@ -17,21 +17,21 @@ const createInvite = async (nickname, userId, groupId) => {
     throw error;
   }
 
-  const existingUserInGroup = await Group.findOne({ _id: groupId });
+  const group = await Group.findOne({ _id: groupId });
 
-  if (existingUserInGroup.users.includes(recipientUser._id)) {
+  if (group.users.includes(recipientUser._id)) {
     const error = new Error("이미 그룹에 속한 사용자입니다.");
     error.statusCode = 409;
     throw error;
   }
 
-  const existingInvite = await Invite.findOne({
+  const exists = await Invite.exists({
     recipient: recipientUser._id,
     group: groupId,
     status: "pending",
   });
 
-  if (existingInvite) {
+  if (!!exists) {
     const error = new Error("이미 초대장이 발송된 사용자입니다.");
     error.statusCode = 409;
     throw error;
@@ -43,73 +43,70 @@ const createInvite = async (nickname, userId, groupId) => {
     group: groupId,
   });
 
-  const savedInvite = await newInvite.save();
-  return savedInvite;
+  await newInvite.save();
 };
 
 const findAllInviteById = async (userId) => {
-  const findInvites = await Invite.find({ recipient: userId });
+  const invites = await Invite.find({ recipient: userId });
 
-  if (!findInvites) {
+  if (!invites) {
     const error = new Error("게시물을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findInvites;
+  return invites;
 };
 
-const findInviteById = async (id) => {
-  const findInvite = await Invite.findById(id).populate("author", "username");
+const findInviteById = async (inviteId) => {
+  const invites = await Invite.findById(inviteId).populate(
+    "author",
+    "username",
+  );
 
-  if (!findInvite) {
+  if (!invites) {
     const error = new Error("게시물을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findInvite;
+  return invites;
 };
 
-const acceptInviteById = async (id, groupId) => {
-  const findInvite = await Invite.findById(id);
-  const findGroup = await Group.findById(groupId);
+const acceptInviteById = async (groupId, inviteId) => {
+  const invite = await Invite.findById(inviteId);
+  const group = await Group.findById(groupId);
 
-  if (!Invite) {
+  if (!invite) {
     const error = new Error("초대를 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  if (!findGroup) {
+  if (!group) {
     const error = new Error("그룹을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  findGroup.users.push(findInvite.recipient);
-  await findGroup.save();
-  await Invite.updateOne({ _id: id }, { status: INVITE_STATUS.ACCEPTED });
+  group.users.push(invite.recipient);
+  await group.save();
 
-  console.log(
-    `user ${findInvite.recipient} accept invite to group ${findGroup.name}`
-  );
+  invite.status = INVITE_STATUS.ACCEPTED;
+  await invite.save();
 };
 
-const rejectInviteById = async (id) => {
-  const findInvite = await Invite.findById(id);
+const rejectInviteById = async (inviteId) => {
+  const invite = await Invite.findById(inviteId);
 
-  if (!Invite) {
+  if (!invite) {
     const error = new Error("초대를 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  await Invite.updateOne({ _id: id }, { status: INVITE_STATUS.REJECTED });
-
-  console.log(
-    `user ${findInvite.recipient} reject invite from user ${findInvite.sender}`
-  );
+  invite.status = INVITE_STATUS.REJECTED;
+  await invite.save();
 };
 
 module.exports = {

@@ -3,8 +3,8 @@ const createJWT = require("../utils/createJWT");
 const User = require("../models/userModel");
 
 const checkDuplicateNickname = async (nickname) => {
-  const user = await User.findOne({ nickname: nickname });
-  return !!user; // 중복이면 true, 아니면 false 반환
+  const exists = await User.exists({ nickname: nickname });
+  return !!exists; // 중복이면 true, 아니면 false 반환
 };
 
 const registerUser = async (username, password, nickname) => {
@@ -15,13 +15,13 @@ const registerUser = async (username, password, nickname) => {
   }
 
   const hashedPassword = await bcryptHash(password);
-  const user = new User({
+  const newUser = new User({
     username: username,
     password: hashedPassword,
     nickname: nickname,
   });
 
-  await user.save();
+  await newUser.save();
 };
 
 const loginUser = async (username, password) => {

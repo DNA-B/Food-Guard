@@ -1,8 +1,7 @@
 const Donation = require("../models/donationModel");
-const Food = require("../models/foodModel");
 
 const createDonation = async (title, content, foodId, userId) => {
-  if (!title) {
+  if (!title || !foodId) {
     const error = new Error("필수 조건을 모두 입력해주세요.");
     error.statusCode = 422;
     throw error;
@@ -15,65 +14,61 @@ const createDonation = async (title, content, foodId, userId) => {
     food: foodId,
   });
 
-  const savedDonation = await newDonation.save();
-  console.log("Saved Donation:", savedDonation);
+  await newDonation.save();
 };
 
 const findAllDonation = async () => {
-  const findDonations = (
+  const donations = (
     await Donation.find().populate("food", "isDonated")
-  ).filter((food) => food.isDonated === false);
+  ).filter((donation) => donation.food.isDonated === false);
 
-  if (!findDonations) {
+  if (!donations) {
     const error = new Error("나눔을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findDonations;
+  return donations;
 };
 
 const findAllDonationByUserId = async (userId) => {
-  const findDonations = await Donation.find({ user: userId });
+  const donations = await Donation.find({ user: userId });
 
-  if (!findDonations) {
+  if (!donations) {
     const error = new Error("나눔을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findDonations;
+  return donations;
 };
 
 const findDonationById = async (id) => {
-  const findDonation = await Donation.findById(id)
+  const donation = await Donation.findById(id)
     .populate("author", "username")
     .populate("food", "name description expiryAt");
 
-  if (!findDonation) {
+  if (!donation) {
     const error = new Error("나눔을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findDonation;
+  return donation;
 };
 
 const updateDonation = async (id, title, content) => {
-  if (!id) {
+  const donation = await Donation.findById(id);
+
+  if (!donation) {
     const error = new Error("나눔을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  await Donation.updateOne(
-    { _id: id }, // filter
-    {
-      // update field
-      title: title,
-      content: content,
-    }
-  );
+  donation.title = title;
+  donation.content = content;
+  await donation.save();
 };
 
 const deleteDonation = async (id) => {
@@ -85,7 +80,7 @@ const deleteDonation = async (id) => {
     throw error;
   }
 
-  await Donation.deleteOne({ _id: id });
+  await donation.deleteOne();
 };
 
 module.exports = {

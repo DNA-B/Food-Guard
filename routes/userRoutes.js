@@ -8,7 +8,7 @@ router.get("/", authMiddleware, async (req, res) => {
   try {
     const id = req.userId;
     const user = await userController.findUserById(id);
-    res.render("users", { nickname: user.nickname });
+    res.render("users/index", { nickname: user.nickname });
   } catch (error) {
     res
       .status(error.statusCode || 500)

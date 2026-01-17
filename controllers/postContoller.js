@@ -19,44 +19,41 @@ const createPost = async (title, content, userId) => {
 };
 
 const findAllPost = async () => {
-  const findPosts = await Post.find();
+  const posts = await Post.find();
 
-  if (!findPosts) {
+  if (!posts) {
     const error = new Error("게시물을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findPosts;
+  return posts;
 };
 
 const findPostById = async (id) => {
-  const findPost = await Post.findById(id).populate("author", "username");
+  const post = await Post.findById(id).populate("author", "username");
 
-  if (!findPost) {
+  if (!post) {
     const error = new Error("게시물을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  return findPost;
+  return post;
 };
 
 const updatePost = async (id, title, content) => {
-  if (!id) {
+  const post = await Post.findById(id);
+
+  if (!post) {
     const error = new Error("게시물을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
   }
 
-  await Post.updateOne(
-    { _id: id }, // filter
-    {
-      // update field
-      title: title,
-      content: content,
-    }
-  );
+  post.title = title;
+  post.content = content;
+  await post.save();
 };
 
 const deletePost = async (id) => {
@@ -68,7 +65,7 @@ const deletePost = async (id) => {
     throw error;
   }
 
-  await Post.deleteOne({ _id: id });
+  await post.deleteOne();
 };
 
 module.exports = {

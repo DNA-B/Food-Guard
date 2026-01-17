@@ -33,11 +33,11 @@ router.post("/create", async (req, res) => {
 });
 
 // get chat list page
-router.get("/chatList", async (req, res) => {
+router.get("/chats", async (req, res) => {
   try {
     const userId = req.userId;
-    const findChatRooms = await chatController.findAllRoomsByUserId(userId);
-    res.render("donations/chats", { userId: userId, chatRooms: findChatRooms });
+    const chatRooms = await chatController.findAllRoomsByUserId(userId);
+    res.render("donations/chats", { userId: userId, chatRooms: chatRooms });
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -62,7 +62,7 @@ router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const donation = await donationController.findDonationById(id);
-    const isAuthor = req.userId === donation.author._id.toString();
+    const isAuthor = donation.author._id.equals(req.userId);
     res.render("donations/detail", {
       donation,
       author: donation.author.username,

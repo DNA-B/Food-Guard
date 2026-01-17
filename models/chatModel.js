@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const chatSchema = new Schema(
   {
-    room: {
+    chatRoom: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ChatRoom",
       required: true,
@@ -18,7 +18,7 @@ const chatSchema = new Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Chat = mongoose.model("Chat", chatSchema);
