@@ -31,7 +31,7 @@ router.post("/create", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const posts = await postController.findAllPost();
-    res.render("posts/", { posts });
+    res.render("posts/index", { posts });
   } catch (error) {
     res
       .status(error.statusCode || 500)
