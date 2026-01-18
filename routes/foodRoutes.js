@@ -4,7 +4,23 @@ const foodController = require("../controllers/foodController.js");
 const userController = require("../controllers/userController.js");
 const groupController = require("../controllers/groupController.js");
 
-// get food create page
+/**
+ * @swagger
+ * /foods/create:
+ *   get:
+ *     summary: Get food create page
+ *     tags:
+ *       - Food
+ *     responses:
+ *       200:
+ *         description: Create food page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/create", async (req, res) => {
   try {
     const userId = req.userId;
@@ -17,7 +33,38 @@ router.get("/create", async (req, res) => {
   }
 });
 
-// food create process
+/**
+ * @swagger
+ * /foods/create:
+ *   post:
+ *     summary: Create a new food
+ *     tags:
+ *       - Food
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               expiryAt:
+ *                 type: string
+ *               groupId:
+ *                 type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to foods or group foods
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.post("/create", async (req, res) => {
   try {
     const { name, description, expiryAt, groupId } = req.body;
@@ -32,7 +79,6 @@ router.post("/create", async (req, res) => {
     );
 
     if (groupId === "nothing") {
-      // 그룹 선택 안했으면 나눔 페이지에서 생성된 음식
       res.redirect("/foods");
     } else {
       res.redirect(`/groups/${groupId}/foods`);
@@ -44,7 +90,23 @@ router.post("/create", async (req, res) => {
   }
 });
 
-// find all food
+/**
+ * @swagger
+ * /foods:
+ *   get:
+ *     summary: Find all foods
+ *     tags:
+ *       - Food
+ *     responses:
+ *       200:
+ *         description: Foods list page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/", async (req, res) => {
   try {
     const userId = req.userId;
@@ -61,7 +123,29 @@ router.get("/", async (req, res) => {
   }
 });
 
-// find one food
+/**
+ * @swagger
+ * /foods/{id}:
+ *   get:
+ *     summary: Find one food
+ *     tags:
+ *       - Food
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Food detail page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -80,7 +164,29 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// get edit food page
+/**
+ * @swagger
+ * /foods/{id}/edit:
+ *   get:
+ *     summary: Get edit food page
+ *     tags:
+ *       - Food
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Edit food page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
@@ -93,16 +199,51 @@ router.get("/:id/edit", async (req, res) => {
   }
 });
 
-// edit food process
+/**
+ * @swagger
+ * /foods/{id}/edit:
+ *   put:
+ *     summary: Edit food
+ *     tags:
+ *       - Food
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               expiryAt:
+ *                 type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to food detail
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.put("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
     const food = await foodController.findFoodById(id);
 
     if (!food) {
-      res
-        .status(404)
-        .render("error", { message: "음식을 찾을 수 없습니다", layout: false });
+      const error = new Error("음식을 찾을 수 없습니다.");
+      error.statusCode = 404;
+      throw error;
     }
 
     const { name, description, expiryAt } = req.body;
@@ -115,15 +256,38 @@ router.put("/:id/edit", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /foods/{id}/eat:
+ *   put:
+ *     summary: Mark food as eaten
+ *     tags:
+ *       - Food
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to foods
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.put("/:id/eat", async (req, res) => {
   try {
     const id = req.params.id;
     const food = await foodController.findFoodById(id);
 
     if (!food) {
-      res
-        .status(404)
-        .render("error", { message: "음식을 찾을 수 없습니다", layout: false });
+      const error = new Error("음식을 찾을 수 없습니다.");
+      error.statusCode = 404;
+      throw error;
     }
 
     await foodController.eatFood(id);
@@ -135,16 +299,38 @@ router.put("/:id/eat", async (req, res) => {
   }
 });
 
-// food delete process
+/**
+ * @swagger
+ * /foods/{id}:
+ *   delete:
+ *     summary: Delete food
+ *     tags:
+ *       - Food
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to foods
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.delete("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const food = await foodController.findFoodById(id);
 
     if (!food) {
-      res
-        .status(404)
-        .render("error", { message: "음식을 찾을 수 없습니다", layout: false });
+      const error = new Error("음식을 찾을 수 없습니다.");
+      error.statusCode = 404;
+      throw error;
     }
 
     await foodController.deleteFood(id);

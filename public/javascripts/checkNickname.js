@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("/check/nickname", {
+      const response = await fetch("/auth/check/nickname", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nickname }),
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     messageElement.className = "text-sm mt-1 block";
     messageElement.classList.remove("hidden");
     messageElement.classList.add(
-      color === "green" ? "text-green-500" : "text-red-500"
+      color === "green" ? "text-green-500" : "text-red-500",
     );
   }
 

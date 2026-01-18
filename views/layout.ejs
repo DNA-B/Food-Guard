@@ -50,18 +50,18 @@
           </li>
           <% if (cookies.token) { %>
           <li>
-            <a href="/logout" class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <a href="/auth/logout" class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors">
               로그아웃
             </a>
           </li>
           <% } else { %>
           <li>
-            <a href="/login" class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <a href="/auth/login" class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors">
               로그인
             </a>
           </li>
           <li>
-            <a href="/register" class="bg-indigo-600 text-white hover:bg-indigo-500 hover:underline px-4 py-2 rounded-md text-sm font-medium transition-colors">
+            <a href="/auth/register" class="bg-indigo-600 text-white hover:bg-indigo-500 hover:underline px-4 py-2 rounded-md text-sm font-medium transition-colors">
               회원가입
             </a>
           </li>

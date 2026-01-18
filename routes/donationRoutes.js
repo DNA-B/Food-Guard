@@ -4,7 +4,23 @@ const donationController = require("../controllers/donationController.js");
 const chatController = require("../controllers/chatController.js");
 const foodController = require("../controllers/foodController.js");
 
-// get create donation page
+/**
+ * @swagger
+ * /donations/create:
+ *   get:
+ *     summary: Get create donation page
+ *     tags:
+ *       - Donation
+ *     responses:
+ *       200:
+ *         description: Create donation page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/create", async (req, res) => {
   try {
     const foods = await foodController.findAllFoodByUserId(req.userId);
@@ -18,7 +34,40 @@ router.get("/create", async (req, res) => {
   }
 });
 
-// donation create process
+/**
+ * @swagger
+ * /donations/create:
+ *   post:
+ *     summary: Create a new donation
+ *     tags:
+ *       - Donation
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - content
+ *               - foodId
+ *             properties:
+ *               title:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               foodId:
+ *                 type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to donations
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.post("/create", async (req, res) => {
   try {
     const { title, content, foodId } = req.body;
@@ -32,7 +81,23 @@ router.post("/create", async (req, res) => {
   }
 });
 
-// get chat list page
+/**
+ * @swagger
+ * /donations/chats:
+ *   get:
+ *     summary: Get chat list page
+ *     tags:
+ *       - Donation
+ *     responses:
+ *       200:
+ *         description: Chat list page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/chats", async (req, res) => {
   try {
     const userId = req.userId;
@@ -45,7 +110,23 @@ router.get("/chats", async (req, res) => {
   }
 });
 
-// find all donation
+/**
+ * @swagger
+ * /donations:
+ *   get:
+ *     summary: Find all donations
+ *     tags:
+ *       - Donation
+ *     responses:
+ *       200:
+ *         description: Donations list page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/", async (req, res) => {
   try {
     const donations = await donationController.findAllDonation();
@@ -57,7 +138,29 @@ router.get("/", async (req, res) => {
   }
 });
 
-// find one donation
+/**
+ * @swagger
+ * /donations/{id}:
+ *   get:
+ *     summary: Find one donation
+ *     tags:
+ *       - Donation
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Donation detail page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -75,7 +178,29 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// get edit Donation page
+/**
+ * @swagger
+ * /donations/{id}/edit:
+ *   get:
+ *     summary: Get edit donation page
+ *     tags:
+ *       - Donation
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Edit donation page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
@@ -88,16 +213,52 @@ router.get("/:id/edit", async (req, res) => {
   }
 });
 
-// edit donation process
+/**
+ * @swagger
+ * /donations/{id}/edit:
+ *   put:
+ *     summary: Edit donation
+ *     tags:
+ *       - Donation
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - content
+ *             properties:
+ *               title:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to donation detail
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.put("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
     const donation = await donationController.findDonationById(id);
 
     if (!donation) {
-      res
-        .status(404)
-        .render("error", { message: "나눔을 찾을 수 없습니다", layout: false });
+      const error = new Error("나눔을 찾을 수 없습니다.");
+      error.statusCode = 404;
+      throw error;
     }
 
     const { title, content } = req.body;
@@ -110,16 +271,38 @@ router.put("/:id/edit", async (req, res) => {
   }
 });
 
-// donation delete process
+/**
+ * @swagger
+ * /donations/{id}:
+ *   delete:
+ *     summary: Delete donation
+ *     tags:
+ *       - Donation
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to donations
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.delete("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const donation = await donationController.findDonationById(id);
 
     if (!donation) {
-      res
-        .status(404)
-        .render("error", { message: "나눔을 찾을 수 없습니다", layout: false });
+      const error = new Error("나눔을 찾을 수 없습니다.");
+      error.statusCode = 404;
+      throw error;
     }
 
     await donationController.deleteDonation(id);

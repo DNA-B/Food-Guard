@@ -4,7 +4,29 @@ const chatController = require("../controllers/chatController.js");
 const donationController = require("../controllers/donationController.js");
 const ChatRoom = require("../models/chatRoomModel.js");
 
-// create Chat
+/**
+ * @swagger
+ * /donations/{donation_id}/chats:
+ *   post:
+ *     summary: Create a new chat room
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - in: path
+ *         name: donation_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to chat room
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.post("/", async (req, res) => {
   try {
     const donationId = req.params.donation_id;
@@ -18,7 +40,34 @@ router.post("/", async (req, res) => {
   }
 });
 
-// get chat detail page
+/**
+ * @swagger
+ * /donations/{donation_id}/chats/{chat_room_id}:
+ *   get:
+ *     summary: Get chat room detail page
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - in: path
+ *         name: donation_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: chat_room_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Chat room page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/:chat_room_id", async (req, res) => {
   try {
     const { donation_id: donationId, chat_room_id: chatRoomId } = req.params;
@@ -42,7 +91,34 @@ router.get("/:chat_room_id", async (req, res) => {
   }
 });
 
-// end chat process
+/**
+ * @swagger
+ * /donations/{donation_id}/chats/{chat_room_id}/complete:
+ *   put:
+ *     summary: Complete the chat room
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - in: path
+ *         name: donation_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: chat_room_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to donations
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.put("/:chat_room_id/complete", async (req, res) => {
   try {
     const { donation_id: donationId, chat_room_id: chatRoomId } = req.params;

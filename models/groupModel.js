@@ -26,7 +26,7 @@ const groupSchema = new Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Group 삭제 시 관련 데이터 정리
@@ -44,7 +44,7 @@ groupSchema.pre(
       console.error("Error in group delete cascade:", error);
       next(error);
     }
-  }
+  },
 );
 
 const Group = mongoose.model("Group", groupSchema);

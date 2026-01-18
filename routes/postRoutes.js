@@ -2,7 +2,23 @@ const express = require("express");
 const router = express.Router();
 const postController = require("../controllers/postContoller");
 
-// get post create page
+/**
+ * @swagger
+ * /posts/create:
+ *   get:
+ *     summary: Get post create page
+ *     tags:
+ *       - Post
+ *     responses:
+ *       200:
+ *         description: Create post page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/create", async (req, res) => {
   try {
     res.render("posts/create");
@@ -13,7 +29,37 @@ router.get("/create", async (req, res) => {
   }
 });
 
-// post create process
+/**
+ * @swagger
+ * /posts/create:
+ *   post:
+ *     summary: Create a new post
+ *     tags:
+ *       - Post
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *             required:
+ *               - title
+ *               - content
+ *     responses:
+ *       302:
+ *         description: Redirect to post detail
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.post("/create", async (req, res) => {
   try {
     const { title, content } = req.body;
@@ -27,7 +73,23 @@ router.post("/create", async (req, res) => {
   }
 });
 
-// find all post
+/**
+ * @swagger
+ * /posts:
+ *   get:
+ *     summary: Find all posts
+ *     tags:
+ *       - Post
+ *     responses:
+ *       200:
+ *         description: Posts list page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/", async (req, res) => {
   try {
     const posts = await postController.findAllPost();
@@ -39,7 +101,29 @@ router.get("/", async (req, res) => {
   }
 });
 
-// find one post
+/**
+ * @swagger
+ * /posts/{id}:
+ *   get:
+ *     summary: Find one post
+ *     tags:
+ *       - Post
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Post detail page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -57,7 +141,29 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// get edit post page
+/**
+ * @swagger
+ * /posts/{id}/edit:
+ *   get:
+ *     summary: Get edit post page
+ *     tags:
+ *       - Post
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Edit post page
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.get("/:id/edit", async (req, res) => {
   try {
     const post = await postController.findPostById(req.params.id);
@@ -69,17 +175,49 @@ router.get("/:id/edit", async (req, res) => {
   }
 });
 
-// edit post process
+/**
+ * @swagger
+ * /posts/{id}/edit:
+ *   put:
+ *     summary: Edit post
+ *     tags:
+ *       - Post
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to post detail
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.put("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
     const post = await postController.findPostById(id);
 
     if (!post) {
-      res.status(404).render("error", {
-        message: "게시물을 찾을 수 없습니다",
-        layout: false,
-      });
+      const error = new Error("게시물을 찾을 수 없습니다.");
+      error.statusCode = 404;
+      throw error;
     }
 
     const { title, content } = req.body;
@@ -92,17 +230,40 @@ router.put("/:id/edit", async (req, res) => {
   }
 });
 
-// post delete process
+/**
+ * @swagger
+ * /posts/{id}:
+ *   delete:
+ *     summary: Delete post
+ *     tags:
+ *       - Post
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to posts
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ *       404:
+ *         description: Post not found
+ */
 router.delete("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const post = await postController.findPostById(id);
 
     if (!post) {
-      res.status(404).render("error", {
-        message: "게시물을 찾을 수 없습니다",
-        layout: false,
-      });
+      const error = new Error("게시물을 찾을 수 없습니다.");
+      error.statusCode = 404;
+      throw error;
     }
 
     await postController.deletePost(id);

@@ -12,7 +12,7 @@ const userSchema = new Schema(
     password: { type: String, required: true },
     nickname: { type: String, unique: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // User 삭제 시 관련 데이터 정리
@@ -28,16 +28,18 @@ userSchema.pre(
       await Group.updateMany(
         // Group: users 배열에서 해당 User의 _id 제거
         { users: this._id },
-        { $pull: { users: this._id } }
+        { $pull: { users: this._id } },
       );
-      await Donation.deleteMany({ author: this_id });
-      await Post.deleteMany({ author: this_id });
+      await Donation.deleteMany({ author: this._id });
+      await Post.deleteMany({ author: this._id });
+      await Chat.deleteMany({ sender: this._id });
+      await ChatRoom.deleteMany({ users: this_.id });
       next();
     } catch (error) {
       console.error("Error in user delete cascade:", error);
       next(error);
     }
-  }
+  },
 );
 
 const User = mongoose.model("User", userSchema);
