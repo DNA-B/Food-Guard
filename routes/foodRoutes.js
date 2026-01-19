@@ -3,6 +3,9 @@ const router = express.Router();
 const foodController = require("../controllers/foodController.js");
 const userController = require("../controllers/userController.js");
 const groupController = require("../controllers/groupController.js");
+const { cloudinary, storage } = require("../config/cloudinary"); // 방금 만든 파일 불러오기
+const multer = require("multer");
+const upload = multer({ storage }); // multer 설정
 
 /**
  * @swagger
@@ -65,10 +68,13 @@ router.get("/create", async (req, res) => {
  *       500:
  *         description: Server error
  */
-router.post("/create", async (req, res) => {
+router.post("/create", upload.single("image"), async (req, res) => {
   try {
     const { name, description, expiryAt, groupId } = req.body;
     const userId = req.userId;
+    const image = req.file
+      ? { url: req.file.path, filename: req.file.filename }
+      : null;
 
     await foodController.createFood(
       name,
@@ -76,6 +82,7 @@ router.post("/create", async (req, res) => {
       expiryAt,
       userId,
       groupId === "nothing" ? null : groupId,
+      image,
     );
 
     if (groupId === "nothing") {
@@ -331,6 +338,10 @@ router.delete("/:id", async (req, res) => {
       const error = new Error("음식을 찾을 수 없습니다.");
       error.statusCode = 404;
       throw error;
+    }
+
+    if (food.image && food.image.filename) {
+      await cloudinary.uploader.destroy(food.image.filename); // 클라우드에서 실제 파일 삭제
     }
 
     await foodController.deleteFood(id);

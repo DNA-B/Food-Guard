@@ -17,7 +17,7 @@
           수정
         </button>
       </form>
-      <form action="/posts/<%= post._id %>/?_method=DELETE" method="POST" class="w-full" id="delete-form" onsubmit="confirm('정말 삭제하시겠습니까?')">
+      <form action="/posts/<%= post._id %>/?_method=DELETE" method="POST" class="w-full" id="delete-form" onsubmit="return confirm('정말 삭제하시겠습니까?')">
         <button type="submit" class="w-full px-4 py-2 rounded bg-red-500 hover:bg-red-600 text-white font-semibold transition">
           삭제
         </button>

@@ -1,6 +1,13 @@
 const Food = require("../models/foodModel");
 
-const createFood = async (name, description, expiryAt, userId, groupId) => {
+const createFood = async (
+  name,
+  description,
+  expiryAt,
+  userId,
+  groupId,
+  image,
+) => {
   if (!name) {
     const error = new Error("필수 조건을 모두 입력해주세요.");
     error.statusCode = 422;
@@ -13,6 +20,7 @@ const createFood = async (name, description, expiryAt, userId, groupId) => {
     expiryAt: expiryAt,
     user: userId,
     group: groupId,
+    image: image,
   });
 
   await newFood.save();

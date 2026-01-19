@@ -16,10 +16,6 @@ router.get("/", (req, res) => {
   res.render("index.ejs");
 });
 
-router.get("/test", (req, res) => {
-  res.render("index.ejs");
-});
-
 router.use("/auth", authRouter);
 router.use("/users", authMiddleware, userRouter);
 router.use("/foods", authMiddleware, foodRouter);

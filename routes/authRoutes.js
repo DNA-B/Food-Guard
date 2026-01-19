@@ -128,7 +128,7 @@ router.post("/register", async (req, res) => {
   try {
     const { username, password, nickname } = req.body;
     await authController.registerUser(username, password, nickname);
-    res.redirect("/auth/login");
+    res.redirect("./login");
   } catch (error) {
     res
       .status(error.statusCode || 500)

@@ -5,7 +5,7 @@ const authMiddleware = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.redirect("/login");
+    return res.redirect("/auth/login");
   }
 
   try {
@@ -15,7 +15,7 @@ const authMiddleware = (req, res, next) => {
   } catch (error) {
     console.error("JWT 검증 실패:", error.message);
     res.clearCookie("token");
-    res.redirect("/login");
+    res.redirect("/auth/login");
   }
 };
 

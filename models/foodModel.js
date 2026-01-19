@@ -32,6 +32,10 @@ const foodSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    image: {
+      url: String,
+      filename: String, // Cloudinary에서 이미지를 식별/삭제할 때 쓰는 ID
+    },
   },
   { timestamps: true },
 );
