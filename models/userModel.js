@@ -5,6 +5,8 @@ const Group = require("./groupModel");
 const { Invite } = require("./inviteModel");
 const Donation = require("./donationModel");
 const Post = require("./postModel");
+const ChatRoom = require("./chatRoomModel");
+const Chat = require("./chatModel");
 
 const userSchema = new Schema(
   {
@@ -33,7 +35,7 @@ userSchema.pre(
       await Donation.deleteMany({ author: this._id });
       await Post.deleteMany({ author: this._id });
       await Chat.deleteMany({ sender: this._id });
-      await ChatRoom.deleteMany({ users: this_.id });
+      await ChatRoom.deleteMany({ users: this._id });
       next();
     } catch (error) {
       console.error("Error in user delete cascade:", error);

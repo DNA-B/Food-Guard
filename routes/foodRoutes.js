@@ -46,7 +46,7 @@ router.get("/create", async (req, res) => {
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -58,6 +58,9 @@ router.get("/create", async (req, res) => {
  *                 type: string
  *               groupId:
  *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       302:
  *         description: Redirect to foods or group foods
@@ -326,6 +329,8 @@ router.put("/:id/eat", async (req, res) => {
  *           Location:
  *             schema:
  *               type: string
+ *       404:
+ *         description: 음식을 찾을 수 없음
  *       500:
  *         description: Server error
  */

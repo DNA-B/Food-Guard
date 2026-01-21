@@ -58,9 +58,9 @@ router.get("/login", (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-    const result = await authController.loginUser(username, password);
+    const token = await authController.loginUser(username, password);
 
-    res.cookie("token", result.token, {
+    res.cookie("token", token, {
       httpOnly: true,
       maxAge: 2 * 60 * 60 * 1000,
     });

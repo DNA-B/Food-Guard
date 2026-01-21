@@ -46,7 +46,7 @@ const loginUser = async (username, password) => {
     throw error;
   }
 
-  return { user: user, token: createJWT(user) };
+  return createJWT(user);
 };
 
 module.exports = { checkDuplicateNickname, registerUser, loginUser };
