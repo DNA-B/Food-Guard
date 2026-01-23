@@ -54,5 +54,5 @@ if (process.env.NODE_ENV === "development") {
 // Listening
 setupSocket(server, app);
 server.listen(PORT, () => {
-  console.log(`Example app listening on port: ${PORT}`);
+  console.log(`Food-Guard app listening on port: ${PORT}`);
 });

@@ -9,6 +9,10 @@
         <input type="text" id="name" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg" />
       </div>
       <div>
+        <label for="name" class="block text-gray-700 font-medium mb-2">종류</label>
+        <input type="text" id="type" name="type" required class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg" />
+      </div>
+      <div>
         <label for="description" class="block text-gray-700 font-medium mb-2">설명</label>
         <textarea id="description" name="description" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg"></textarea>
       </div>
@@ -31,7 +35,7 @@
       <div>
         <label for="image" class="block text-gray-700 font-medium mb-2">사진 업로드</label>
         <input type="file" id="image" name="image" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <p class="text-sm text-gray-500 mt-1">이미지 파일만 업로드 가능합니다.</p>
+        <p id="upload-alert" class="text-sm text-gray-500 mt-1">이미지 파일만 업로드 가능합니다.</p>
       </div>
       <div class="flex gap-4 mt-8">
         <button type="submit" class="w-full px-5 py-3 bg-green-600 text-white rounded hover:bg-green-500 font-semibold transition text-lg">
@@ -44,3 +48,45 @@
     </form>
   </div>
 </div>
+
+<script>
+  const imageInput = document.getElementById('image');
+  const typeInput = document.getElementById('type');
+  const imageAlert = document.getElementById('upload-alert');
+
+  imageInput.addEventListener('change', async (e) => {
+    if (imageInput.files && imageInput.files[0]) {
+      const file = imageInput.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+
+      imageAlert.innerText = "🤖 인공지능이 맛보는 중...";
+      imageAlert.classList.add('animate-pulse');
+
+      try {
+        const response = await fetch('/foods/analyze', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        console.log(result.type);
+        imageAlert.innerText = "🤖 음식 종류 분석 완료";
+        imageAlert.classList.remove('animate-pulse');
+
+        if (response.ok) {
+          if (result.type) {
+            typeInput.value = result.type;
+          }
+        } else {
+          throw new Error(result.error);
+        }
+
+      } catch (error) {
+        console.error("Gemini 분석 에러:", error);
+        alert("음식 종류 분석에 실패했습니다.");
+      }
+    }
+  });
+</script>

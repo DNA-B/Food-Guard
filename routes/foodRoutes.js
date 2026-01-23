@@ -3,9 +3,53 @@ const router = express.Router();
 const foodController = require("../controllers/foodController.js");
 const userController = require("../controllers/userController.js");
 const groupController = require("../controllers/groupController.js");
-const { cloudinary, storage } = require("../config/cloudinary"); // 방금 만든 파일 불러오기
+const { cloudinary, storage } = require("../config/cloudinary.js"); // 방금 만든 파일 불러오기
 const multer = require("multer");
-const upload = multer({ storage }); // multer 설정
+const upload = multer({ storage }); // storage 저장용 multer
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GEMINI_API_KEY } = require("../config/config.js");
+const upload2 = multer(); // ai 분석용 multer
+
+router.post("/analyze", upload2.single("image"), async (req, res) => {
+  try {
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({
+      model: "gemini-3-flash",
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: "object",
+          properties: {
+            type: { type: "string" },
+          },
+          required: ["type"],
+        },
+      },
+    });
+
+    if (!req.file) {
+      return res.status(400).json({ error: "이미지가 없습니다." });
+    }
+
+    const base64ImageData = req.file.buffer.toString("base64");
+    const result = await model.generateContent([
+      {
+        inlineData: {
+          mimeType: req.file.mimetype,
+          data: base64ImageData,
+        },
+      },
+      { text: "음식의 종류를 한국어로 분석해서 반환." },
+    ]);
+
+    const responseText = result.response.candidates[0].content.parts[0].text;
+    console.log(responseText);
+    res.json(JSON.parse(responseText));
+  } catch (error) {
+    console.error("Server Error:", error);
+    res.status(500).json({ error: "분석 실패", detail: error.message });
+  }
+});
 
 /**
  * @swagger
