@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const postController = require("../controllers/postContoller");
+const { cloudinary, storage } = require("../config/cloudinary.js");
+const multer = require("multer");
+const upload = multer({ storage }); // storage 저장용 multer
 
 /**
  * @swagger
@@ -60,11 +63,20 @@ router.get("/create", async (req, res) => {
  *       500:
  *         description: Server error
  */
-router.post("/create", async (req, res) => {
+router.post("/create", upload.single("image"), async (req, res) => {
   try {
     const { title, content } = req.body;
     const userId = req.userId;
-    const savedPost = await postController.createPost(title, content, userId);
+    const image = req.file
+      ? { url: req.file.path, filename: req.file.filename }
+      : null;
+
+    const savedPost = await postController.createPost(
+      title,
+      content,
+      userId,
+      image,
+    );
     res.redirect(`/posts/${savedPost._id}`);
   } catch (error) {
     res
@@ -128,12 +140,55 @@ router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const post = await postController.findPostById(id);
+    const comments = await postController.findAllCommentsByPostId(id);
     const isAuthor = post.author._id.equals(req.userId);
     res.render("posts/detail", {
       post: post,
       author: post.author.username,
+      comments: comments,
       isAuthor: isAuthor,
+      userId: req.userId,
     });
+  } catch (error) {
+    res
+      .status(error.statusCode || 500)
+      .render("error", { message: error.message, layout: false });
+  }
+});
+
+router.post("/:id/comments", async (req, res) => {
+  try {
+    const { "comment-content": content } = req.body;
+    postController.createComment(req.params.id, req.userId, content);
+    res.redirect(`/posts/${req.params.id}`);
+  } catch (error) {
+    res
+      .status(error.statusCode || 500)
+      .render("error", { message: error.message, layout: false });
+  }
+});
+
+router.post("/:id/comments/:comment_id/reply", async (req, res) => {
+  try {
+    const { "comment-content": content } = req.body;
+    postController.replyComment(
+      req.params.id,
+      req.userId,
+      content,
+      req.params.comment_id,
+    );
+    res.redirect(`/posts/${req.params.id}`);
+  } catch (error) {
+    res
+      .status(error.statusCode || 500)
+      .render("error", { message: error.message, layout: false });
+  }
+});
+
+router.delete("/:id/comments/:comment_id", async (req, res) => {
+  try {
+    await postController.deleteComment(req.params.comment_id);
+    res.redirect(`/posts/${req.params.id}`);
   } catch (error) {
     res
       .status(error.statusCode || 500)

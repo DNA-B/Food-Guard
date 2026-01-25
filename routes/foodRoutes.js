@@ -3,7 +3,7 @@ const router = express.Router();
 const foodController = require("../controllers/foodController.js");
 const userController = require("../controllers/userController.js");
 const groupController = require("../controllers/groupController.js");
-const { cloudinary, storage } = require("../config/cloudinary.js"); // 방금 만든 파일 불러오기
+const { cloudinary, storage } = require("../config/cloudinary.js");
 const multer = require("multer");
 const upload = multer({ storage }); // storage 저장용 multer
 const { GoogleGenerativeAI } = require("@google/generative-ai");
@@ -14,7 +14,7 @@ router.post("/analyze", upload2.single("image"), async (req, res) => {
   try {
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({
-      model: "gemini-3-flash",
+      model: "gemini-2.5-flash",
       generationConfig: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -245,7 +245,8 @@ router.get("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
     const food = await foodController.findFoodById(id);
-    res.render("foods/edit", { food: food });
+    const groups = await groupController.findAllGroupByUserId(req.userId);
+    res.render("foods/edit", { food: food, groups: groups });
   } catch (error) {
     res
       .status(error.statusCode || 500)

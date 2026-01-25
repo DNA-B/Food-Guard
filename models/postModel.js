@@ -16,10 +16,12 @@ const postSchema = new Schema(
       ref: "User",
       required: true,
     },
-    // 사진
-    // 좋아요
+    image: {
+      url: String,
+      filename: String, // Cloudinary에서 이미지를 식별/삭제할 때 쓰는 ID
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Post = mongoose.model("Post", postSchema);

@@ -3,17 +3,36 @@
     <h1 class="text-3xl font-bold text-indigo-700 mb-8">음식 수정</h1>
     <form action="/foods/<%= food._id %>/edit/?_method=PUT" method="POST" class="space-y-4">
       <div>
-        <label for="name" class="block text-gray-700 font-medium mb-1">이름</label>
-        <input type="text" id="name" name="name" value="<%= food.name %>" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+        <label for="name" class="block text-gray-700 font-medium mb-2">이름</label>
+        <input type="text" id="name" name="name" value="<%= food.name %>" required class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg" />
       </div>
       <div>
-        <label for="description" class="block text-gray-700 font-medium mb-1">설명</label>
-        <textarea id="description" name="description" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400">
-<%= food.description %></textarea>
+        <label for="type" class="block text-gray-700 font-medium mb-2">종류</label>
+        <input type="text" id="type" name="type" value="<%= food.type %>" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg" />
       </div>
       <div>
-        <label for="expiryAt" class="block text-gray-700 font-medium mb-1">유통기한</label>
-        <input type="date" id="expiryAt" name="expiryAt" value="<%= food.expiryAt.toISOString().split('T')[0] %>" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+        <label for="description" class="block text-gray-700 font-medium mb-2">설명</label>
+        <textarea id="description" name="description" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg"><%= food.description %></textarea>
+      </div>
+      <div>
+        <label for="expiryAt" class="block text-gray-700 font-medium mb-2">유통기한</label>
+        <input type="date" id="expiryAt" name="expiryAt" value="<%= food.expiryAt %>" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg" />
+      </div>
+      <div>
+        <label for="groupId" class="block text-gray-700 font-medium mb-2">그룹 선택</label>
+        <select id="groupId" name="groupId" value="<%= food.group.name %>" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg">
+          <% if (Array.isArray(groups) !== 'undefined' && groups.length > 0) { %>
+          <% groups.forEach(function(group) { %>
+          <option value="<%= group._id %>" <%= (typeof groupId !== 'undefined' && groupId === group._id.toString()) ? 'selected' : '' %>><%= group.name %>
+          </option>
+          <% }); %>
+          <% } %>
+        </select>
+      </div>
+      <div>
+        <label for="image" class="block text-gray-700 font-medium mb-2">사진 업로드</label>
+        <input type="file" id="image" name="image" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <p id="upload-alert" class="text-sm text-gray-500 mt-1">이미지 파일만 업로드 가능합니다.</p>
       </div>
       <div class="flex gap-2 mt-6">
         <button type="submit" class="w-full px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 font-semibold transition">

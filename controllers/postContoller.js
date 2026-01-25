@@ -1,6 +1,7 @@
 const Post = require("../models/postModel");
+const { COMMENT_STATUS, Comment } = require("../models/commentModel");
 
-const createPost = async (title, content, userId) => {
+const createPost = async (title, content, userId, image) => {
   if (!title) {
     const error = new Error("필수 조건을 모두 입력해주세요.");
     error.statusCode = 422;
@@ -11,6 +12,7 @@ const createPost = async (title, content, userId) => {
     title: title,
     content: content,
     author: userId,
+    image: image,
   });
 
   const savedPost = await newPost.save();
@@ -68,10 +70,75 @@ const deletePost = async (id) => {
   await post.deleteOne();
 };
 
+const findAllCommentsByPostId = async (postId) => {
+  console.log(postId);
+  const comments = await Comment.find({ post: postId })
+    .populate("author", "username")
+    .populate("parentComment");
+
+  if (!comments) {
+    const error = new Error("댓글을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return comments;
+};
+
+const createComment = async (postId, userId, content) => {
+  if (!content) {
+    const error = new Error("필수 조건을 모두 입력해주세요.");
+    error.statusCode = 422;
+    throw error;
+  }
+
+  const newComment = new Comment({
+    post: postId,
+    author: userId,
+    content: content,
+  });
+
+  await newComment.save();
+};
+
+const replyComment = async (postId, userId, content, commentId) => {
+  if (!content) {
+    const error = new Error("필수 조건을 모두 입력해주세요.");
+    error.statusCode = 422;
+    throw error;
+  }
+
+  const newComment = new Comment({
+    post: postId,
+    author: userId,
+    content: content,
+    parentComment: commentId,
+  });
+
+  await newComment.save();
+};
+
+const deleteComment = async (commentId) => {
+  const comment = await Comment.findById(commentId);
+
+  if (!comment) {
+    const error = new Error("댓글을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  comment.status = COMMENT_STATUS.DELETED;
+  await comment.save();
+};
+
 module.exports = {
   createPost,
   findAllPost,
   findPostById,
   updatePost,
   deletePost,
+  findAllCommentsByPostId,
+  createComment,
+  replyComment,
+  deleteComment,
 };

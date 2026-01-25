@@ -7,12 +7,17 @@ const foodSchema = new Schema(
       type: String,
       required: true,
     },
+    type: {
+      type: String,
+      default: null,
+    },
     description: {
       type: String,
       default: null,
     },
     expiryAt: {
       type: Date,
+      default: null,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
