@@ -264,7 +264,7 @@ router.get("/:id/edit", async (req, res) => {
  *       500:
  *         description: Server error
  */
-router.put("/:id/edit", async (req, res) => {
+router.put("/:id/edit", upload.single("image"), async (req, res) => {
   try {
     const id = req.params.id;
     const post = await postController.findPostById(id);
@@ -276,7 +276,10 @@ router.put("/:id/edit", async (req, res) => {
     }
 
     const { title, content } = req.body;
-    await postController.updatePost(id, title, content);
+    const image = req.file
+      ? { url: req.file.path, filename: req.file.filename }
+      : null;
+    await postController.updatePost(id, title, content, image);
     res.redirect(`/posts/${id}`);
   } catch (error) {
     res

@@ -1,5 +1,6 @@
 const Post = require("../models/postModel");
 const { COMMENT_STATUS, Comment } = require("../models/commentModel");
+const { cloudinary } = require("../config/cloudinary.js");
 
 const createPost = async (title, content, userId, image) => {
   if (!title) {
@@ -16,7 +17,6 @@ const createPost = async (title, content, userId, image) => {
   });
 
   const savedPost = await newPost.save();
-  console.log("Saved Post:", savedPost);
   return savedPost;
 };
 
@@ -44,7 +44,7 @@ const findPostById = async (id) => {
   return post;
 };
 
-const updatePost = async (id, title, content) => {
+const updatePost = async (id, title, content, image) => {
   const post = await Post.findById(id);
 
   if (!post) {
@@ -53,8 +53,13 @@ const updatePost = async (id, title, content) => {
     throw error;
   }
 
+  if (post.image && post.image.filename) {
+    await cloudinary.uploader.destroy(post.image.filename); // 클라우드에서 실제 파일 삭제
+  }
+
   post.title = title;
   post.content = content;
+  post.image = image;
   await post.save();
 };
 
@@ -67,11 +72,14 @@ const deletePost = async (id) => {
     throw error;
   }
 
+  if (post.image && post.image.filename) {
+    await cloudinary.uploader.destroy(post.image.filename); // 클라우드에서 실제 파일 삭제
+  }
+
   await post.deleteOne();
 };
 
 const findAllCommentsByPostId = async (postId) => {
-  console.log(postId);
   const comments = await Comment.find({ post: postId })
     .populate("author", "username")
     .populate("parentComment");

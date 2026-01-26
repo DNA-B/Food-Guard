@@ -1,4 +1,5 @@
 const Food = require("../models/foodModel");
+const { cloudinary } = require("../config/cloudinary.js");
 
 const createFood = async (
   name,
@@ -72,7 +73,7 @@ const findFoodById = async (id) => {
   return food;
 };
 
-const updateFood = async (id, name, description, expiryAt) => {
+const updateFood = async (id, name, description, expiryAt, image) => {
   const food = await Food.findById(id);
 
   if (!food) {
@@ -81,9 +82,14 @@ const updateFood = async (id, name, description, expiryAt) => {
     throw error;
   }
 
+  if (food.image && food.image.filename) {
+    await cloudinary.uploader.destroy(food.image.filename); // 클라우드에서 실제 파일 삭제
+  }
+
   food.name = name;
   food.description = description;
   food.expiryAt = expiryAt;
+  food.image = image;
   await food.save();
 };
 
@@ -107,6 +113,10 @@ const deleteFood = async (id) => {
     const error = new Error("음식을 찾을 수 없습니다.");
     error.statusCode = 404;
     throw error;
+  }
+
+  if (food.image && food.image.filename) {
+    await cloudinary.uploader.destroy(food.image.filename); // 클라우드에서 실제 파일 삭제
   }
 
   await food.deleteOne();

@@ -3,7 +3,7 @@ const router = express.Router();
 const foodController = require("../controllers/foodController.js");
 const userController = require("../controllers/userController.js");
 const groupController = require("../controllers/groupController.js");
-const { cloudinary, storage } = require("../config/cloudinary.js");
+const { storage } = require("../config/cloudinary.js");
 const multer = require("multer");
 const upload = multer({ storage }); // storage 저장용 multer
 const { GoogleGenerativeAI } = require("@google/generative-ai");
@@ -290,7 +290,7 @@ router.get("/:id/edit", async (req, res) => {
  *       500:
  *         description: Server error
  */
-router.put("/:id/edit", async (req, res) => {
+router.put("/:id/edit", upload.single("image"), async (req, res) => {
   try {
     const id = req.params.id;
     const food = await foodController.findFoodById(id);
@@ -302,7 +302,10 @@ router.put("/:id/edit", async (req, res) => {
     }
 
     const { name, description, expiryAt } = req.body;
-    await foodController.updateFood(id, name, description, expiryAt);
+    const image = req.file
+      ? { url: req.file.path, filename: req.file.filename }
+      : null;
+    await foodController.updateFood(id, name, description, expiryAt, image);
     res.redirect(`/foods/${id}`);
   } catch (error) {
     res
@@ -388,10 +391,6 @@ router.delete("/:id", async (req, res) => {
       const error = new Error("음식을 찾을 수 없습니다.");
       error.statusCode = 404;
       throw error;
-    }
-
-    if (food.image && food.image.filename) {
-      await cloudinary.uploader.destroy(food.image.filename); // 클라우드에서 실제 파일 삭제
     }
 
     await foodController.deleteFood(id);

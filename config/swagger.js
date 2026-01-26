@@ -1,5 +1,7 @@
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const fs = require("fs");
+const path = require("path");
 
 const options = {
   definition: {
@@ -19,6 +21,14 @@ const options = {
 };
 
 const specs = swaggerJsdoc(options);
+
+try {
+  const outputPath = path.join(__dirname, "../docs/Swagger/swagger-spec.json");
+  fs.writeFileSync(outputPath, JSON.stringify(specs, null, 2), "utf8");
+  console.log("✅ Swagger JSON file has been generated successfully.");
+} catch (err) {
+  console.error("❌ Failed to save Swagger JSON:", err);
+}
 
 module.exports = {
   swaggerUi,
