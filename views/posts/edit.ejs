@@ -13,6 +13,13 @@
       </div>
       <div>
         <label for="image" class="block text-gray-700 font-medium mb-2">사진 업로드</label>
+        <div class="mb-2">
+          <% if (post.image && post.image.url) { %>
+          <img id="preview" src="<%= post.image.url %>" alt="이미지 미리보기" class="max-h-48 rounded" />
+          <% } else { %>
+          <img id="preview" src="" alt="이미지 미리보기" style="display:none" class="max-h-48 rounded" />
+          <% } %>
+        </div>
         <input type="file" id="image" name="image" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400" />
         <p id="upload-alert" class="text-sm text-gray-500 mt-1">이미지 파일만 업로드 가능합니다.</p>
       </div>
@@ -27,3 +34,22 @@
     </form>
   </div>
 </div>
+
+<script>
+  const fileInput = document.getElementById('image');
+  const preview = document.getElementById('preview');
+
+  fileInput.addEventListener('change', function(e) {
+    const file = e.target.files && e.target.files[0];
+
+    if (!file)
+      return;
+
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      preview.src = ev.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+</script>

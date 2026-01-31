@@ -1,6 +1,7 @@
 <div class="flex flex-col items-center min-h-[60vh] py-8">
   <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-2xl">
-    <h1 class="text-3xl font-bold text-indigo-700 mb-8"><%= food.name %></h1>
+    <h1 class="text-3xl font-bold text-indigo-700 mb-2"><%= food.name %></h1>
+    <div class="font-medium text-gray-500 mb-8"><%= food.createdAt ? food.createdAt.toISOString().split('T')[0] : '' %></div>
     <div class="mb-8 w-full flex justify-center bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
       <% if (food.image && food.image.url) { %>
       <img src="<%= food.image.url %>" alt="<%= food.name %>" class="max-w-full h-auto max-h-[400px] object-contain shadow-sm">
@@ -18,7 +19,7 @@
         <span class="font-semibold">설명</span> : <%= food.description %>
       </p>
       <p class="text-gray-700">
-        <span class="font-semibold">유통기한</span> : <%= food.expiryAt %>
+        <span class="font-semibold">유통기한</span> : <%= food.expiryAt ? food.expiryAt.toISOString().split('T')[0] : '' %>
       </p>
       <p class="text-gray-700">
         <span class="font-semibold">그룹</span> : <%= groupName %>

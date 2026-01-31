@@ -21,10 +21,9 @@ const donationSchema = new Schema(
       ref: "Food",
       required: true,
     },
-    // 사진
     // 찜
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Donation = mongoose.model("Donation", donationSchema);

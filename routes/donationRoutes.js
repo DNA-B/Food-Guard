@@ -205,7 +205,13 @@ router.get("/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
     const donation = await donationController.findDonationById(id);
-    res.render("donations/edit", { donation: donation });
+    const foods = await foodController.findAllFoodByUserId(req.userId);
+    res.render("donations/edit", {
+      donation: donation,
+      foods: foods.filter(
+        (food) => !donation.food.equals(food) && !food.isDonated,
+      ),
+    });
   } catch (error) {
     res
       .status(error.statusCode || 500)
@@ -261,8 +267,8 @@ router.put("/:id/edit", async (req, res) => {
       throw error;
     }
 
-    const { title, content } = req.body;
-    await donationController.updateDonation(id, title, content);
+    const { title, content, foodId } = req.body;
+    await donationController.updateDonation(id, title, content, foodId);
     res.redirect(`/donations/${id}`);
   } catch (error) {
     res

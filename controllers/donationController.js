@@ -46,7 +46,7 @@ const findAllDonationByUserId = async (userId) => {
 const findDonationById = async (id) => {
   const donation = await Donation.findById(id)
     .populate("author", "username")
-    .populate("food", "name description expiryAt");
+    .populate("food");
 
   if (!donation) {
     const error = new Error("나눔을 찾을 수 없습니다.");
@@ -57,7 +57,7 @@ const findDonationById = async (id) => {
   return donation;
 };
 
-const updateDonation = async (id, title, content) => {
+const updateDonation = async (id, title, content, foodId) => {
   const donation = await Donation.findById(id);
 
   if (!donation) {
@@ -68,6 +68,7 @@ const updateDonation = async (id, title, content) => {
 
   donation.title = title;
   donation.content = content;
+  donation.food = foodId;
   await donation.save();
 };
 

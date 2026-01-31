@@ -53,8 +53,9 @@ const updatePost = async (id, title, content, image) => {
     throw error;
   }
 
-  if (post.image && post.image.filename) {
+  if (!post.image.equals(image) && post.image && post.image.filename) {
     await cloudinary.uploader.destroy(post.image.filename); // 클라우드에서 실제 파일 삭제
+    console.log(`cloudinary ${post.image.filename}- deleted`);
   }
 
   post.title = title;

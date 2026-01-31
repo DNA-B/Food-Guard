@@ -82,8 +82,9 @@ const updateFood = async (id, name, description, expiryAt, image) => {
     throw error;
   }
 
-  if (food.image && food.image.filename) {
+  if (!food.image.equals(image) && food.image && food.image.filename) {
     await cloudinary.uploader.destroy(food.image.filename); // 클라우드에서 실제 파일 삭제
+    console.log(`cloudinary ${food.image.filename}- deleted`);
   }
 
   food.name = name;
