@@ -13,16 +13,19 @@ cloudinary.config({
   api_secret: CLOUDINARY_API_SECRET,
 });
 
+/*
 // 2. Multer 전용 저장소(Storage) 설정
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "food-guard-img", // Cloudinary 대시보드에 생성될 폴더 이름
+    folder: CLODUINARY_FOLDER_NAME, // Cloudinary 대시보드에 생성될 폴더 이름
     allowed_formats: ["jpg", "png", "jpeg"],
   },
 });
+*/
 
 module.exports = {
   cloudinary,
-  storage,
+  CLOUDINARY_STORAGE_NAME,
+  // storage,
 };

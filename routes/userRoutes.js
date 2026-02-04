@@ -58,7 +58,6 @@ router.get("/", authMiddleware, async (req, res) => {
  *         description: Server error
  */
 router.get("/delete", authMiddleware, (req, res) => {
-  // TODO
   res.render("users/delete");
 });
 

@@ -7,7 +7,7 @@
     <% foods.forEach(food => { %>
     <div class="bg-white shadow-lg rounded-xl p-8 flex flex-col gap-4 hover:shadow-xl transition-shadow">
       <span class="text-lg font-medium text-gray-800"><%= food.name %></span>
-      <span class="text-gray-500"><%= food.description.substr(0, 10) %></span>
+      <span class="text-gray-500"><%= food.description !== null ? food.description.substr(0, 10) : "설명 없음" %></span>
       <a href="/foods/<%= food._id %>" class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 font-semibold transition self-start">상세보기</a>
     </div>
     <% }); %>

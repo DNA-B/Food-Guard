@@ -53,7 +53,12 @@ const updatePost = async (id, title, content, image) => {
     throw error;
   }
 
-  if (!post.image.equals(image) && post.image && post.image.filename) {
+  if (
+    post.image &&
+    post.image.filename &&
+    !post.image.equals(image) &&
+    image.url !== "uploading" // 이미 이미지가 있는 상황에서, 업로딩 상태면 나중에 update 한 번 더 들어올 때 삭제되므로 예외 처리
+  ) {
     await cloudinary.uploader.destroy(post.image.filename); // 클라우드에서 실제 파일 삭제
     console.log(`cloudinary ${post.image.filename}- deleted`);
   }
@@ -75,6 +80,7 @@ const deletePost = async (id) => {
 
   if (post.image && post.image.filename) {
     await cloudinary.uploader.destroy(post.image.filename); // 클라우드에서 실제 파일 삭제
+    console.log(`cloudinary ${post.image.filename}- deleted`);
   }
 
   await post.deleteOne();

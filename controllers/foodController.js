@@ -3,6 +3,7 @@ const { cloudinary } = require("../config/cloudinary.js");
 
 const createFood = async (
   name,
+  type,
   description,
   expiryAt,
   userId,
@@ -17,6 +18,7 @@ const createFood = async (
 
   const newFood = new Food({
     name: name,
+    type: type,
     description: description,
     expiryAt: expiryAt,
     user: userId,
@@ -24,7 +26,7 @@ const createFood = async (
     image: image,
   });
 
-  await newFood.save();
+  return await newFood.save();
 };
 
 const findAllFoodByUserId = async (userId) => {
@@ -73,7 +75,7 @@ const findFoodById = async (id) => {
   return food;
 };
 
-const updateFood = async (id, name, description, expiryAt, image) => {
+const updateFood = async (id, name, type, description, expiryAt, image) => {
   const food = await Food.findById(id);
 
   if (!food) {
@@ -82,16 +84,22 @@ const updateFood = async (id, name, description, expiryAt, image) => {
     throw error;
   }
 
-  if (!food.image.equals(image) && food.image && food.image.filename) {
+  if (
+    food.image &&
+    food.image.filename &&
+    !food.image.equals(image) &&
+    image.url !== "uploading" // 이미 이미지가 있는 상황에서, 업로딩 상태면 나중에 update 한 번 더 들어올 때 삭제되므로 예외 처리
+  ) {
     await cloudinary.uploader.destroy(food.image.filename); // 클라우드에서 실제 파일 삭제
     console.log(`cloudinary ${food.image.filename}- deleted`);
   }
 
   food.name = name;
+  food.type = type;
   food.description = description;
   food.expiryAt = expiryAt;
   food.image = image;
-  await food.save();
+  return await food.save();
 };
 
 const eatFood = async (id) => {
@@ -118,6 +126,7 @@ const deleteFood = async (id) => {
 
   if (food.image && food.image.filename) {
     await cloudinary.uploader.destroy(food.image.filename); // 클라우드에서 실제 파일 삭제
+    console.log(`cloudinary ${food.image.filename}- deleted`);
   }
 
   await food.deleteOne();

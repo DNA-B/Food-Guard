@@ -25,7 +25,7 @@ router.get("/create", async (req, res) => {
   try {
     const foods = await foodController.findAllFoodByUserId(req.userId);
     res.render("donations/create", {
-      foods: foods.filter((food) => food.isDonated === false),
+      foods: foods ? foods.filter((food) => food.isDonated === false) : [],
     });
   } catch (error) {
     res
@@ -208,9 +208,9 @@ router.get("/:id/edit", async (req, res) => {
     const foods = await foodController.findAllFoodByUserId(req.userId);
     res.render("donations/edit", {
       donation: donation,
-      foods: foods.filter(
-        (food) => !donation.food.equals(food) && !food.isDonated,
-      ),
+      foods: foods
+        ? foods.filter((food) => !donation.food.equals(food) && !food.isDonated)
+        : [],
     });
   } catch (error) {
     res
