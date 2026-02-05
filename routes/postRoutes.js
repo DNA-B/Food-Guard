@@ -71,7 +71,7 @@ router.post("/create", upload.single("image"), async (req, res) => {
   try {
     const { title, content } = req.body;
     const userId = req.userId;
-    const fakeImage = { url: "uploading", filename: null }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
+    const fakeImage = { url: "uploading", filename: "uploading" }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
     const savedPost = await postController.createPost(
       title,
       content,
@@ -300,7 +300,7 @@ router.put("/:id/edit", upload.single("image"), async (req, res) => {
     }
 
     const { title, content } = req.body;
-    const fakeImage = { url: "uploading", filename: null }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
+    const fakeImage = { url: "uploading", filename: "uploading" }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
     await postController.updatePost(id, title, content, fakeImage);
 
     res.redirect(`/posts/${id}`);

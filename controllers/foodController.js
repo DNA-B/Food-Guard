@@ -84,21 +84,23 @@ const updateFood = async (id, name, type, description, expiryAt, image) => {
     throw error;
   }
 
-  if (
-    food.image &&
-    food.image.filename &&
-    !food.image.equals(image) &&
-    image.url !== "uploading" // 이미 이미지가 있는 상황에서, 업로딩 상태면 나중에 update 한 번 더 들어올 때 삭제되므로 예외 처리
-  ) {
-    await cloudinary.uploader.destroy(food.image.filename); // 클라우드에서 실제 파일 삭제
-    console.log(`cloudinary ${food.image.filename}- deleted`);
+  if (image.url !== "uploading" && image.filename !== "uploading") {
+    // 이미지가 없는 상태에서, 업로딩 상태면 나중에 update 한 번 더 들어올 때 삭제되므로 예외 처리
+    if (food.image.url && food.image.filename && !food.image.equals(image)) {
+      await cloudinary.uploader.destroy(food.image.filename); // 클라우드에서 실제 파일 삭제
+      console.log(`cloudinary ${food.image.filename} - deleted`);
+    }
   }
 
   food.name = name;
   food.type = type;
   food.description = description;
   food.expiryAt = expiryAt;
-  food.image = image;
+  food.image = {
+    url: image.url,
+    filename:
+      image.filename !== "uploading" ? image.filename : food.image.filename,
+  }; // filename으로 기존 이미지 삭제해야 할 수 있기 때문에 uploading인 경우, 기존 이미지 이름을 가져간다.
   return await food.save();
 };
 

@@ -53,19 +53,21 @@ const updatePost = async (id, title, content, image) => {
     throw error;
   }
 
-  if (
-    post.image &&
-    post.image.filename &&
-    !post.image.equals(image) &&
-    image.url !== "uploading" // 이미 이미지가 있는 상황에서, 업로딩 상태면 나중에 update 한 번 더 들어올 때 삭제되므로 예외 처리
-  ) {
-    await cloudinary.uploader.destroy(post.image.filename); // 클라우드에서 실제 파일 삭제
-    console.log(`cloudinary ${post.image.filename}- deleted`);
+  if (image.url !== "uploading" && image.filename !== "uploading") {
+    // 이미지가 없는 상태에서, 업로딩 상태면 나중에 update 한 번 더 들어올 때 삭제되므로 예외 처리
+    if (post.image.url && post.image.filename && !post.image.equals(image)) {
+      await cloudinary.uploader.destroy(post.image.filename); // 클라우드에서 실제 파일 삭제
+      console.log(`cloudinary ${post.image.filename} - deleted`);
+    }
   }
 
   post.title = title;
   post.content = content;
-  post.image = image;
+  post.image = {
+    url: image.url,
+    filename:
+      image.filename !== "uploading" ? image.filename : post.image.filename,
+  }; // filename으로 기존 이미지 삭제해야 할 수 있기 때문에 uploading인 경우, 기존 이미지 이름을 가져간다.
   await post.save();
 };
 

@@ -90,7 +90,7 @@ router.post("/create", upload.single("image"), async (req, res) => {
   try {
     const { name, type, description, expiryAt, groupId } = req.body;
     const userId = req.userId;
-    const fakeImage = { url: "uploading", filename: null }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
+    const fakeImage = { url: "uploading", filename: "uploading" }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
     const newFood = await foodController.createFood(
       name,
       type,
@@ -300,7 +300,7 @@ router.put("/:id/edit", upload.single("image"), async (req, res) => {
     }
 
     const { name, type, description, expiryAt } = req.body;
-    const fakeImage = { url: "uploading", filename: null }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
+    const fakeImage = { url: "uploading", filename: "uploading" }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
     await foodController.updateFood(
       id,
       name,
