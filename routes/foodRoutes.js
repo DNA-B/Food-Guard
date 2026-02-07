@@ -194,7 +194,15 @@ router.post("/create", upload.single("image"), async (req, res) => {
 
           // 업로드 성공 시 아까 만든 Food의 image 업데이트
           const image = { url: result.secure_url, filename: result.public_id };
-          await foodController.updateFood(newFood._id, name, type, description, expiryAt, image);
+          await foodController.updateFood(
+            newFood._id,
+            groupId === "nothing" ? null : groupId,
+            name,
+            type,
+            description,
+            expiryAt,
+            image,
+          );
           console.log(`[ID: ${newFood._id}] 이미지 업로드 및 DB 업데이트 완료`);
         },
       );
@@ -339,6 +347,8 @@ router.get("/:id/edit", async (req, res) => {
  *               expiryAt:
  *                 type: string
  *                 format: date-time
+ *               groupId:
+ *                 type: string
  *               image:
  *                 type: string
  *                 format: binary
@@ -363,9 +373,17 @@ router.put("/:id/edit", upload.single("image"), async (req, res) => {
       throw error;
     }
 
-    const { name, type, description, expiryAt } = req.body;
+    const { name, type, description, expiryAt, groupId } = req.body;
     const fakeImage = req.file ? { url: "uploading", filename: "uploading" } : null; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
-    await foodController.updateFood(id, name, type, description, expiryAt, fakeImage);
+    await foodController.updateFood(
+      id,
+      groupId === "nothing" ? null : groupId,
+      name,
+      type,
+      description,
+      expiryAt,
+      fakeImage,
+    );
 
     // 일단 클라이언트에게 응답
     res.redirect(`/foods/${id}`);
@@ -382,7 +400,15 @@ router.put("/:id/edit", upload.single("image"), async (req, res) => {
 
           // 업로드 성공 시 아까 업데이트한 Food의 image 업데이트
           const image = { url: result.secure_url, filename: result.public_id };
-          await foodController.updateFood(id, name, type, description, expiryAt, image);
+          await foodController.updateFood(
+            id,
+            groupId === "nothing" ? null : groupId,
+            name,
+            type,
+            description,
+            expiryAt,
+            image,
+          );
           console.log(`[ID: ${id}] 이미지 업로드 및 DB 업데이트 완료`);
         },
       );
@@ -429,7 +455,7 @@ router.put("/:id/eat", async (req, res) => {
     }
 
     await foodController.eatFood(id);
-    res.redirect("/foods");
+    res.redirect(`/groups/${food.group._id}/foods`);
   } catch (error) {
     res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }

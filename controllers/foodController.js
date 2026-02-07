@@ -65,7 +65,7 @@ const findFoodById = async (id) => {
   return food;
 };
 
-const updateFood = async (id, name, type, description, expiryAt, image) => {
+const updateFood = async (id, groupId, name, type, description, expiryAt, image) => {
   const food = await Food.findById(id);
 
   if (!food) {
@@ -93,6 +93,7 @@ const updateFood = async (id, name, type, description, expiryAt, image) => {
   food.type = type;
   food.description = description;
   food.expiryAt = expiryAt;
+  food.group = groupId;
 
   return await food.save();
 };
