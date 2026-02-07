@@ -32,7 +32,7 @@ const inviteSchema = new Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Invite = mongoose.model("Invite", inviteSchema);

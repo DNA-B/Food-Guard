@@ -59,10 +59,7 @@ const findAllInviteById = async (userId) => {
 };
 
 const findInviteById = async (inviteId) => {
-  const invites = await Invite.findById(inviteId).populate(
-    "author",
-    "username",
-  );
+  const invites = await Invite.findById(inviteId).populate("author", "username");
 
   if (!invites) {
     const error = new Error("게시물을 찾을 수 없습니다.");

@@ -30,9 +30,7 @@ router.get("/create", async (req, res) => {
     const groupId = req.params.group_id;
     res.render("groups/inviteCreate", { groupId });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -76,9 +74,7 @@ router.post("/create", async (req, res) => {
     await inviteController.createInvite(nickname, userId, groupId);
     res.redirect(`/groups/${groupId}`);
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -116,9 +112,7 @@ router.post("/:invite_id/accept", async (req, res) => {
     await inviteController.acceptInviteById(groupId, inviteId);
     res.redirect(`/groups/invites`);
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -156,9 +150,7 @@ router.post("/:invite_id/reject", async (req, res) => {
     await inviteController.rejectInviteById(inviteId);
     res.redirect(`/groups/invites`);
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 

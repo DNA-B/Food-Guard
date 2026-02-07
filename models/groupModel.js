@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const Food = require("./foodModel");
+const { Food, FOOD_STATUS } = require("./foodModel");
 const { Invite } = require("./inviteModel");
 
 const groupSchema = new Schema(

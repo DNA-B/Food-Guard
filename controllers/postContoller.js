@@ -53,21 +53,24 @@ const updatePost = async (id, title, content, image) => {
     throw error;
   }
 
-  if (image.url !== "uploading" && image.filename !== "uploading") {
-    // 이미지가 없는 상태에서, 업로딩 상태면 나중에 update 한 번 더 들어올 때 삭제되므로 예외 처리
-    if (post.image.url && post.image.filename && !post.image.equals(image)) {
-      await cloudinary.uploader.destroy(post.image.filename); // 클라우드에서 실제 파일 삭제
-      console.log(`cloudinary ${post.image.filename} - deleted`);
+  if (image) {
+    if (image.url !== "uploading" && image.filename !== "uploading") {
+      // 이미지가 없는 상태에서, 업로딩 상태면 나중에 update 한 번 더 들어올 때 삭제되므로 예외 처리
+      if (post.image.url && post.image.filename && post.image.filename !== image.filename) {
+        await cloudinary.uploader.destroy(post.image.filename); // 클라우드에서 실제 파일 삭제
+        console.log(`cloudinary ${post.image.filename} - deleted`);
+      }
     }
+
+    post.image = {
+      url: image.url,
+      filename: image.filename === "uploading" ? post.image.filename : image.filename,
+    }; // filename으로 기존 이미지 삭제해야 할 수 있기 때문에 uploading인 경우, 기존 이미지 이름을 가져간다.
   }
 
   post.title = title;
   post.content = content;
-  post.image = {
-    url: image.url,
-    filename:
-      image.filename !== "uploading" ? image.filename : post.image.filename,
-  }; // filename으로 기존 이미지 삭제해야 할 수 있기 때문에 uploading인 경우, 기존 이미지 이름을 가져간다.
+
   await post.save();
 };
 
@@ -89,9 +92,7 @@ const deletePost = async (id) => {
 };
 
 const findAllCommentsByPostId = async (postId) => {
-  const comments = await Comment.find({ post: postId })
-    .populate("author", "username")
-    .populate("parentComment");
+  const comments = await Comment.find({ post: postId }).populate("author", "username").populate("parentComment");
 
   if (!comments) {
     const error = new Error("댓글을 찾을 수 없습니다.");

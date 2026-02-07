@@ -1,10 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const postController = require("../controllers/postContoller");
-const {
-  cloudinary,
-  CLOUDINARY_STORAGE_NAME,
-} = require("../config/cloudinary.js");
+const { cloudinary, CLOUDINARY_STORAGE_NAME } = require("../config/cloudinary.js");
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB 제한 (RAM 보호)
@@ -30,9 +27,7 @@ router.get("/create", async (req, res) => {
   try {
     res.render("posts/create");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -71,13 +66,8 @@ router.post("/create", upload.single("image"), async (req, res) => {
   try {
     const { title, content } = req.body;
     const userId = req.userId;
-    const fakeImage = { url: "uploading", filename: "uploading" }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
-    const savedPost = await postController.createPost(
-      title,
-      content,
-      userId,
-      fakeImage,
-    );
+    const fakeImage = req.file ? { url: "uploading", filename: "uploading" } : null; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
+    const savedPost = await postController.createPost(title, content, userId, fakeImage);
 
     res.redirect(`/posts/${savedPost._id}`);
 
@@ -94,18 +84,14 @@ router.post("/create", upload.single("image"), async (req, res) => {
           // 업로드 성공 시 아까 만든 Food의 image 업데이트
           const image = { url: result.secure_url, filename: result.public_id };
           await postController.updatePost(savedPost._id, title, content, image);
-          console.log(
-            `[ID: ${savedPost._id}] 이미지 업로드 및 DB 업데이트 완료`,
-          );
+          console.log(`[ID: ${savedPost._id}] 이미지 업로드 및 DB 업데이트 완료`);
         },
       );
       // buffer에 있는 이미지 파일을 cloudinary에 업로드
       cldStream.end(req.file.buffer);
     }
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -131,9 +117,7 @@ router.get("/", async (req, res) => {
     const posts = await postController.findAllPost();
     res.render("posts/index", { posts });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -174,9 +158,7 @@ router.get("/:id", async (req, res) => {
       userId: req.userId,
     });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -186,26 +168,17 @@ router.post("/:id/comments", async (req, res) => {
     postController.createComment(req.params.id, req.userId, content);
     res.redirect(`/posts/${req.params.id}`);
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
 router.post("/:id/comments/:comment_id/reply", async (req, res) => {
   try {
     const { "comment-content": content } = req.body;
-    postController.replyComment(
-      req.params.id,
-      req.userId,
-      content,
-      req.params.comment_id,
-    );
+    postController.replyComment(req.params.id, req.userId, content, req.params.comment_id);
     res.redirect(`/posts/${req.params.id}`);
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -214,9 +187,7 @@ router.delete("/:id/comments/:comment_id", async (req, res) => {
     await postController.deleteComment(req.params.comment_id);
     res.redirect(`/posts/${req.params.id}`);
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -248,9 +219,7 @@ router.get("/:id/edit", async (req, res) => {
     const post = await postController.findPostById(req.params.id);
     res.render("posts/edit", { post: post });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -300,7 +269,7 @@ router.put("/:id/edit", upload.single("image"), async (req, res) => {
     }
 
     const { title, content } = req.body;
-    const fakeImage = { url: "uploading", filename: "uploading" }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
+    const fakeImage = req.file ? { url: "uploading", filename: "uploading" } : null; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
     await postController.updatePost(id, title, content, fakeImage);
 
     res.redirect(`/posts/${id}`);
@@ -325,9 +294,7 @@ router.put("/:id/edit", upload.single("image"), async (req, res) => {
       cldStream.end(req.file.buffer);
     }
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -370,9 +337,7 @@ router.delete("/:id", async (req, res) => {
     await postController.deletePost(id);
     res.redirect("/posts");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 

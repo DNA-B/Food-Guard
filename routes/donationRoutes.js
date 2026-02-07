@@ -28,9 +28,7 @@ router.get("/create", async (req, res) => {
       foods: foods ? foods.filter((food) => food.isDonated === false) : [],
     });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -75,9 +73,7 @@ router.post("/create", async (req, res) => {
     await donationController.createDonation(title, content, foodId, userId);
     res.redirect("/donations");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -104,9 +100,7 @@ router.get("/chats", async (req, res) => {
     const chatRooms = await chatController.findAllRoomsByUserId(userId);
     res.render("donations/chats", { userId: userId, chatRooms: chatRooms });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -132,9 +126,7 @@ router.get("/", async (req, res) => {
     const donations = await donationController.findAllDonation();
     res.render("donations/index", { donations: donations });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -172,9 +164,7 @@ router.get("/:id", async (req, res) => {
       isAuthor: isAuthor,
     });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -208,14 +198,10 @@ router.get("/:id/edit", async (req, res) => {
     const foods = await foodController.findAllFoodByUserId(req.userId);
     res.render("donations/edit", {
       donation: donation,
-      foods: foods
-        ? foods.filter((food) => !donation.food.equals(food) && !food.isDonated)
-        : [],
+      foods: foods ? foods.filter((food) => !donation.food.equals(food) && !food.isDonated) : [],
     });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -271,9 +257,7 @@ router.put("/:id/edit", async (req, res) => {
     await donationController.updateDonation(id, title, content, foodId);
     res.redirect(`/donations/${id}`);
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -314,9 +298,7 @@ router.delete("/:id", async (req, res) => {
     await donationController.deleteDonation(id);
     res.redirect("/donations");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 

@@ -33,7 +33,7 @@
       <div>
         <label for="image" class="block text-gray-700 font-medium mb-2">사진 업로드</label>
         <div class="mb-2">
-          <% if (food.image && food.image.url) { %>
+          <% if (food.image.url && food.image.filename) { %>
           <img id="preview" src="<%= food.image.url %>" alt="이미지 미리보기" class="max-h-48 rounded" />
           <% } else { %>
           <img id="preview" src="" alt="이미지 미리보기" style="display:none" class="max-h-48 rounded" />

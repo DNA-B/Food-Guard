@@ -4,7 +4,7 @@
     <div class="font-medium text-gray-500 mb-8"><%= post.createdAt ? post.createdAt.toISOString().split('T')[0] : '' %></div>
     <div class="space-y-2 mb-6">
       <div class="mb-8 w-full flex justify-center bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
-        <% if (post.image && post.image.url) { %>
+        <% if (post.image.url && post.image.filename) { %>
         <% if (post.image.url === "uploading") { %>
         <div class="w-full py-20 flex flex-col items-center justify-center text-gray-400">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-2 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">

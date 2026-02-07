@@ -34,9 +34,7 @@ router.post("/", async (req, res) => {
     const chatRoom = await chatController.createChatRoom(donationId, userId);
     res.redirect(`/donations/${donationId}/chats/${chatRoom._id}`);
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -85,9 +83,7 @@ router.get("/:chat_room_id", async (req, res) => {
       isClosed: chatRoom.isClosed,
     });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -125,9 +121,7 @@ router.put("/:chat_room_id/complete", async (req, res) => {
     await chatController.closeChatRoom(donationId, chatRoomId);
     res.redirect("../../");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 

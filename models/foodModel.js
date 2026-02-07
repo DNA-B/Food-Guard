@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const Donation = require("./donationModel.js");
 
+const FOOD_STATUS = Object.freeze({
+  AVAILABLE: "available",
+  CONSUMED: "consumed",
+  DONATED: "donated",
+});
+
 const foodSchema = new Schema(
   {
     name: {
@@ -31,13 +37,11 @@ const foodSchema = new Schema(
       default: null,
     },
     // TODO: ENUM으로 변경
-    isConsumed: {
-      type: Boolean,
-      default: false,
-    },
-    isDonated: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      enum: Object.values(FOOD_STATUS),
+      default: FOOD_STATUS.AVAILABLE,
+      required: true,
     },
     image: {
       url: String,
@@ -65,4 +69,4 @@ foodSchema.pre(
 );
 
 const Food = mongoose.model("Food", foodSchema);
-module.exports = Food;
+module.exports = { Food, FOOD_STATUS };

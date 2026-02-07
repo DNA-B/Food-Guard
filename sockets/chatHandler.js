@@ -35,10 +35,7 @@ module.exports = (io, socket) => {
 
       await newMessage.save();
 
-      const fullMessage = await Chat.findById(newMessage._id).populate(
-        "sender",
-        "nickname",
-      );
+      const fullMessage = await Chat.findById(newMessage._id).populate("sender", "nickname");
 
       io.to(chatRoom).emit("receive_message", fullMessage);
     } catch (error) {

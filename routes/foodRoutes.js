@@ -3,10 +3,7 @@ const router = express.Router();
 const foodController = require("../controllers/foodController.js");
 const userController = require("../controllers/userController.js");
 const groupController = require("../controllers/groupController.js");
-const {
-  cloudinary,
-  CLOUDINARY_STORAGE_NAME,
-} = require("../config/cloudinary.js");
+const { cloudinary, CLOUDINARY_STORAGE_NAME } = require("../config/cloudinary.js");
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB 제한 (RAM 보호)
@@ -80,9 +77,7 @@ router.get("/create", async (req, res) => {
     const groups = await groupController.findAllGroupByUserId(userId);
     res.render("foods/create", { groups });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -90,7 +85,7 @@ router.post("/create", upload.single("image"), async (req, res) => {
   try {
     const { name, type, description, expiryAt, groupId } = req.body;
     const userId = req.userId;
-    const fakeImage = { url: "uploading", filename: "uploading" }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
+    const fakeImage = req.file ? { url: "uploading", filename: "uploading" } : null; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
     const newFood = await foodController.createFood(
       name,
       type,
@@ -121,14 +116,7 @@ router.post("/create", upload.single("image"), async (req, res) => {
 
           // 업로드 성공 시 아까 만든 Food의 image 업데이트
           const image = { url: result.secure_url, filename: result.public_id };
-          await foodController.updateFood(
-            newFood._id,
-            name,
-            type,
-            description,
-            expiryAt,
-            image,
-          );
+          await foodController.updateFood(newFood._id, name, type, description, expiryAt, image);
           console.log(`[ID: ${newFood._id}] 이미지 업로드 및 DB 업데이트 완료`);
         },
       );
@@ -136,9 +124,7 @@ router.post("/create", upload.single("image"), async (req, res) => {
       cldStream.end(req.file.buffer);
     }
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -169,9 +155,7 @@ router.get("/", async (req, res) => {
       foods: foods,
     });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -210,9 +194,7 @@ router.get("/:id", async (req, res) => {
       isOwner: isOwner,
     });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -246,9 +228,7 @@ router.get("/:id/edit", async (req, res) => {
     const groups = await groupController.findAllGroupByUserId(req.userId);
     res.render("foods/edit", { food: food, groups: groups });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -300,15 +280,8 @@ router.put("/:id/edit", upload.single("image"), async (req, res) => {
     }
 
     const { name, type, description, expiryAt } = req.body;
-    const fakeImage = { url: "uploading", filename: "uploading" }; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
-    await foodController.updateFood(
-      id,
-      name,
-      type,
-      description,
-      expiryAt,
-      fakeImage,
-    );
+    const fakeImage = req.file ? { url: "uploading", filename: "uploading" } : null; // 업로드 중임을 표시하기 위한 가짜 이미지 객체
+    await foodController.updateFood(id, name, type, description, expiryAt, fakeImage);
 
     // 일단 클라이언트에게 응답
     res.redirect(`/foods/${id}`);
@@ -325,14 +298,7 @@ router.put("/:id/edit", upload.single("image"), async (req, res) => {
 
           // 업로드 성공 시 아까 업데이트한 Food의 image 업데이트
           const image = { url: result.secure_url, filename: result.public_id };
-          await foodController.updateFood(
-            id,
-            name,
-            type,
-            description,
-            expiryAt,
-            image,
-          );
+          await foodController.updateFood(id, name, type, description, expiryAt, image);
           console.log(`[ID: ${id}] 이미지 업로드 및 DB 업데이트 완료`);
         },
       );
@@ -340,9 +306,7 @@ router.put("/:id/edit", upload.single("image"), async (req, res) => {
       cldStream.end(req.file.buffer);
     }
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -383,9 +347,7 @@ router.put("/:id/eat", async (req, res) => {
     await foodController.eatFood(id);
     res.redirect("/foods");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -428,9 +390,7 @@ router.delete("/:id", async (req, res) => {
     await foodController.deleteFood(id);
     res.redirect("/foods");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 

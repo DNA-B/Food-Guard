@@ -27,9 +27,7 @@ router.get("/invites", async (req, res) => {
     const invites = await groupController.findAllPendingInvitesByUserId(userId);
     res.render("groups/invites", { invites: invites });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -54,9 +52,7 @@ router.get("/create", async (req, res) => {
   try {
     res.render("groups/create");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -95,9 +91,7 @@ router.post("/create", async (req, res) => {
     await groupController.createGroup(name, description, userId);
     res.redirect("/groups");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -122,16 +116,13 @@ router.get("/", async (req, res) => {
   try {
     const userId = req.userId;
     const groups = await groupController.findAllGroupByUserId(userId);
-    const isExistInvites =
-      await groupController.existPendingInvitesByUserId(userId);
+    const isExistInvites = await groupController.existPendingInvitesByUserId(userId);
     res.render("groups/index", {
       groups: groups,
       isExistInvites: isExistInvites,
     });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -164,9 +155,7 @@ router.get("/:id", async (req, res) => {
     const group = await groupController.findGroupById(id);
     res.render("groups/detail", { group: group });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -199,9 +188,7 @@ router.get("/:id/edit", async (req, res) => {
     const group = await groupController.findGroupById(id);
     res.render("groups/edit", { group: group });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -254,9 +241,7 @@ router.put("/:id/edit", async (req, res) => {
     await groupController.updateGroup(id, name, description);
     res.redirect(`/groups/${id}`);
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -290,9 +275,7 @@ router.get("/:id/foods", async (req, res) => {
     const foods = await foodController.findAllFoodByGroupId(id);
     res.render("groups/foods", { groupName: group.name, foods: foods });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -328,9 +311,7 @@ router.get("/:id/users", async (req, res) => {
       managerId: result.managerId,
     });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -364,9 +345,7 @@ router.post("/:id/exit", async (req, res) => {
     await groupController.exitGroup(id, userId);
     res.redirect("/groups");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 

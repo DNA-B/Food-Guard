@@ -67,9 +67,7 @@ router.post("/login", async (req, res) => {
 
     res.redirect("/");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -130,9 +128,7 @@ router.post("/register", async (req, res) => {
     await authController.registerUser(username, password, nickname);
     res.redirect("./login");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message });
+    res.status(error.statusCode || 500).render("error", { message: error.message });
   }
 });
 
@@ -193,9 +189,7 @@ router.post("/check/nickname", async (req, res) => {
     const isDuplicate = await authController.checkDuplicateNickname(nickname);
     res.json({ isDuplicate });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message });
+    res.status(error.statusCode || 500).render("error", { message: error.message });
   }
 });
 

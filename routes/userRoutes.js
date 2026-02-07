@@ -30,9 +30,7 @@ router.get("/", authMiddleware, async (req, res) => {
     const user = await userController.findUserById(id);
     res.render("users/index", { nickname: user.nickname });
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 
@@ -89,9 +87,7 @@ router.delete("/delete", authMiddleware, async (req, res) => {
     res.clearCookie("token");
     res.redirect("/");
   } catch (error) {
-    res
-      .status(error.statusCode || 500)
-      .render("error", { message: error.message, layout: false });
+    res.status(error.statusCode || 500).render("error", { message: error.message, layout: false });
   }
 });
 

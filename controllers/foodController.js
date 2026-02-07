@@ -1,15 +1,7 @@
-const Food = require("../models/foodModel");
+const { Food, FOOD_STATUS } = require("../models/foodModel");
 const { cloudinary } = require("../config/cloudinary.js");
 
-const createFood = async (
-  name,
-  type,
-  description,
-  expiryAt,
-  userId,
-  groupId,
-  image,
-) => {
+const createFood = async (name, type, description, expiryAt, userId, groupId, image) => {
   if (!name) {
     const error = new Error("필수 조건을 모두 입력해주세요.");
     error.statusCode = 422;
@@ -32,8 +24,7 @@ const createFood = async (
 const findAllFoodByUserId = async (userId) => {
   const foods = await Food.find({
     user: userId,
-    isConsumed: false,
-    isDonated: false,
+    status: FOOD_STATUS.AVAILABLE,
   });
 
   if (!foods) {
@@ -48,8 +39,7 @@ const findAllFoodByUserId = async (userId) => {
 const findAllFoodByGroupId = async (groupId) => {
   const foods = await Food.find({
     group: groupId,
-    isConsumed: false,
-    isDonated: false,
+    status: FOOD_STATUS.AVAILABLE,
   });
 
   if (!foods) {
@@ -84,23 +74,26 @@ const updateFood = async (id, name, type, description, expiryAt, image) => {
     throw error;
   }
 
-  if (image.url !== "uploading" && image.filename !== "uploading") {
-    // 이미지가 없는 상태에서, 업로딩 상태면 나중에 update 한 번 더 들어올 때 삭제되므로 예외 처리
-    if (food.image.url && food.image.filename && !food.image.equals(image)) {
-      await cloudinary.uploader.destroy(food.image.filename); // 클라우드에서 실제 파일 삭제
-      console.log(`cloudinary ${food.image.filename} - deleted`);
+  if (image) {
+    if (image.url !== "uploading" && image.filename !== "uploading") {
+      // 이미지가 없는 상태에서, 업로딩 상태면 나중에 update 한 번 더 들어올 때 삭제되므로 예외 처리
+      if (food.image.url && food.image.filename && food.image.filename !== image.filename) {
+        await cloudinary.uploader.destroy(food.image.filename); // 클라우드에서 실제 파일 삭제
+        console.log(`cloudinary ${food.image.filename} - deleted`);
+      }
     }
+
+    food.image = {
+      url: image.url,
+      filename: image.filename === "uploading" ? food.image.filename : image.filename,
+    }; // filename으로 기존 이미지 삭제해야 할 수 있기 때문에 uploading인 경우, 기존 이미지 이름을 가져간다.
   }
 
   food.name = name;
   food.type = type;
   food.description = description;
   food.expiryAt = expiryAt;
-  food.image = {
-    url: image.url,
-    filename:
-      image.filename !== "uploading" ? image.filename : food.image.filename,
-  }; // filename으로 기존 이미지 삭제해야 할 수 있기 때문에 uploading인 경우, 기존 이미지 이름을 가져간다.
+
   return await food.save();
 };
 
@@ -113,7 +106,7 @@ const eatFood = async (id) => {
     throw error;
   }
 
-  food.isConsumed = true;
+  food.status = FOOD_STATUS.CONSUMED;
   await food.save();
 };
 

@@ -1,10 +1,6 @@
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const {
-  CLOUDINARY_STORAGE_NAME,
-  CLOUDINARY_API_KEY,
-  CLOUDINARY_API_SECRET,
-} = require("./config.js");
+const { CLOUDINARY_STORAGE_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = require("./config.js");
 
 // 1. Cloudinary 기본 설정
 cloudinary.config({

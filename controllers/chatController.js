@@ -42,9 +42,7 @@ const findMessagesByRoomId = async (chatRoomId) => {
 };
 
 const findAllRoomsByUserId = async (userId) => {
-  const chatRooms = await ChatRoom.find({ users: userId })
-    .populate("users")
-    .populate("donation", "title");
+  const chatRooms = await ChatRoom.find({ users: userId }).populate("users").populate("donation", "title");
   return chatRooms;
 };
 
