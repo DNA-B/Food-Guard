@@ -13,6 +13,42 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { GEMINI_API_KEY } = require("../config/config.js");
 const upload2 = multer(); // ai 분석용 multer
 
+/**
+ * @swagger
+ * /foods/analyze:
+ *   post:
+ *     summary: Analyze food image using AI
+ *     tags:
+ *       - Food
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - image
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Food image to analyze
+ *     responses:
+ *       200:
+ *         description: Food type analysis result
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 type:
+ *                   type: string
+ *                   description: Detected food type in Korean
+ *       400:
+ *         description: Image not provided
+ *       500:
+ *         description: Analysis failed
+ */
 router.post("/analyze", upload2.single("image"), async (req, res) => {
   try {
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
@@ -81,6 +117,48 @@ router.get("/create", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /foods/create:
+ *   post:
+ *     summary: Create a new food
+ *     tags:
+ *       - Food
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - type
+ *               - expiryAt
+ *             properties:
+ *               name:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               expiryAt:
+ *                 type: string
+ *                 format: date-time
+ *               groupId:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       302:
+ *         description: Redirect to foods or group foods
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.post("/create", upload.single("image"), async (req, res) => {
   try {
     const { name, type, description, expiryAt, groupId } = req.body;
@@ -248,16 +326,22 @@ router.get("/:id/edit", async (req, res) => {
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
  *               name:
  *                 type: string
+ *               type:
+ *                 type: string
  *               description:
  *                 type: string
  *               expiryAt:
  *                 type: string
+ *                 format: date-time
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       302:
  *         description: Redirect to food detail

@@ -41,17 +41,20 @@ router.get("/create", async (req, res) => {
  *     requestBody:
  *       required: true
  *       content:
- *         application/x-www-form-urlencoded:
+ *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - title
+ *               - content
  *             properties:
  *               title:
  *                 type: string
  *               content:
  *                 type: string
- *             required:
- *               - title
- *               - content
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       302:
  *         description: Redirect to post detail
@@ -162,6 +165,40 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /posts/{id}/comments:
+ *   post:
+ *     summary: Create a comment on a post
+ *     tags:
+ *       - Post
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - comment-content
+ *             properties:
+ *               comment-content:
+ *                 type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to post detail
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.post("/:id/comments", async (req, res) => {
   try {
     const { "comment-content": content } = req.body;
@@ -172,6 +209,45 @@ router.post("/:id/comments", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /posts/{id}/comments/{comment_id}/reply:
+ *   post:
+ *     summary: Reply to a comment
+ *     tags:
+ *       - Post
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: comment_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - comment-content
+ *             properties:
+ *               comment-content:
+ *                 type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to post detail
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.post("/:id/comments/:comment_id/reply", async (req, res) => {
   try {
     const { "comment-content": content } = req.body;
@@ -182,6 +258,34 @@ router.post("/:id/comments/:comment_id/reply", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /posts/{id}/comments/{comment_id}:
+ *   delete:
+ *     summary: Delete a comment
+ *     tags:
+ *       - Post
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: comment_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to post detail
+ *         headers:
+ *           Location:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ */
 router.delete("/:id/comments/:comment_id", async (req, res) => {
   try {
     await postController.deleteComment(req.params.comment_id);
@@ -239,14 +343,20 @@ router.get("/:id/edit", async (req, res) => {
  *     requestBody:
  *       required: true
  *       content:
- *         application/x-www-form-urlencoded:
+ *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - title
+ *               - content
  *             properties:
  *               title:
  *                 type: string
  *               content:
  *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       302:
  *         description: Redirect to post detail
