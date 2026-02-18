@@ -149,7 +149,6 @@
 <h1 align="center">👀 Preview 👀</h1>
   <br>
   <div align="center">
-  <b><i>공사중
     <div>
       <h3>메인페이지 ~ 로그인/로그아웃</h3>
         <img src="public/videos/메인-로그인_로그아웃.gif">
