@@ -15,54 +15,54 @@
 </head>
 
 <body class="h-full flex flex-col min-h-screen">
-  <header class="bg-white shadow-sm">
-    <nav class="max-w-7xl mx-auto px-6 sm:px-4 lg:px-8">
-      <div class="flex justify-between h-16 items-center">
+  <header class="bg-white shadow-md border-b border-gray-200">
+    <nav class="max-w-7xl mx-auto px-8 lg:px-12">
+      <div class="flex justify-between h-20 items-center">
         <div class="flex-shrink-0">
-          <a href="/" class="flex items-center text-3xl font-bold text-indigo-600 hover:text-indigo-500 transition-colors">
-            <img src="/images/icon.png" class="h-10 w-10 mr-3 rounded-full" />
+          <a href="/" class="flex items-center text-4xl font-bold text-indigo-600 hover:text-indigo-500 transition-colors">
+            <img src="/images/icon.png" class="h-12 w-12 mr-3 rounded-full" />
             Food Guard
           </a>
         </div>
-        <ul class="flex space-x-8">
+        <ul class="flex space-x-10">
           <li>
-            <a href="/users" class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <a href="/users" class="text-gray-700 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-base font-medium transition-colors">
               마이페이지
             </a>
           </li>
           <li>
-            <a href="/foods" class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <a href="/foods" class="text-gray-700 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-base font-medium transition-colors">
               내 음식 보기</a><br />
           </li>
           <li>
-            <a href="/groups" class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <a href="/groups" class="text-gray-700 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-base font-medium transition-colors">
               그룹
             </a>
           </li>
           <li>
-            <a href="/donations" class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <a href="/donations" class="text-gray-700 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-base font-medium transition-colors">
               나눔
             </a>
           </li>
           <li>
-            <a href="/posts" class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <a href="/posts" class="text-gray-700 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-base font-medium transition-colors">
               커뮤니티
             </a>
           </li>
           <% if (cookies.token) { %>
           <li>
-            <a href="/auth/logout" class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <a href="/auth/logout" class="text-gray-700 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-base font-medium transition-colors">
               로그아웃
             </a>
           </li>
           <% } else { %>
           <li>
-            <a href="/auth/login" class="text-gray-600 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <a href="/auth/login" class="text-gray-700 hover:text-indigo-600 hover:underline px-3 py-2 rounded-md text-base font-medium transition-colors">
               로그인
             </a>
           </li>
           <li>
-            <a href="/auth/register" class="bg-indigo-600 text-white hover:bg-indigo-500 hover:underline px-4 py-2 rounded-md text-sm font-medium transition-colors">
+            <a href="/auth/register" class="bg-indigo-600 text-white hover:bg-indigo-500 hover:underline px-4 py-2 rounded-md text-base font-medium transition-colors">
               회원가입
             </a>
           </li>
@@ -72,13 +72,13 @@
     </nav>
   </header>
 
-  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <main class="flex-grow max-w-7xl mx-auto px-8 lg:px-12 py-10 w-full">
     <%- body %>
   </main>
 
   <footer class="bg-white border-t border-gray-200 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <p class="text-center text-gray-500 text-sm">
+    <div class="max-w-7xl mx-auto px-8 lg:px-12 py-8">
+      <p class="text-center text-gray-500 text-base">
         &copy; 2025 - Food Guard. All rights reserved.
       </p>
     </div>

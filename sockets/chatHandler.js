@@ -44,7 +44,7 @@ module.exports = (io, socket) => {
     }
   });
 
-  // 3. 나눔 완료
+  // 3. disconnect
   socket.on("disconnect", async (data) => {
     try {
       const { chatRoom } = data;
@@ -52,7 +52,15 @@ module.exports = (io, socket) => {
     } catch (error) {}
   });
 
-  // // 4. 타이핑 상태 알림
+  // 4. 나눔 종료
+  socket.on("end-donation", async (data) => {
+    try {
+      // TODO: 기부 종료 로직 처리 (DB 반영 등)
+      socket.emit("redirection", { redirectUrl: "/donations" });
+    } catch (error) {}
+  });
+
+  // // 5. 타이핑 상태 알림
   // socket.on("typing", (data) => {
   //   socket.to(data.chatRoom).emit("display_typing", { user: data.user });
   // });

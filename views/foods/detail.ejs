@@ -1,58 +1,58 @@
-<div class="flex flex-col items-center min-h-[60vh] py-8">
-  <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-2xl">
-    <h1 class="text-3xl font-bold text-indigo-700 mb-2"><%= food.name %></h1>
-    <div class="font-medium text-gray-500 mb-8"><%= food.createdAt ? food.createdAt.toISOString().split('T')[0] : '' %></div>
-    <div class="mb-8 w-full flex justify-center bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
+<div class="flex flex-col items-center min-h-[60vh] py-10 w-full">
+  <div class="bg-gradient-to-br from-green-50 to-emerald-100 shadow-lg rounded-2xl p-10 w-full max-w-4xl border border-green-200">
+    <h1 class="text-4xl font-bold text-green-700 mb-2 line-clamp-2"><%= food.name %></h1>
+    <div class="font-medium text-gray-600 mb-6 text-sm"><%= food.createdAt ? food.createdAt.toISOString().split('T')[0] : '' %></div>
+    <div class="mb-8 w-full flex justify-center bg-white rounded-lg overflow-hidden border border-green-200 py-4">
       <% if (food.image.url && food.image.filename) { %>
       <% if (food.image.url === "uploading") { %>
-      <div class="w-full py-20 flex flex-col items-center justify-center text-gray-400">
+      <div class="w-full py-16 flex flex-col items-center justify-center text-gray-400">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-2 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
         </svg>
-        <p>이미지 업로드 중입니다.</p>
+        <p class="text-base">이미지 업로드 중입니다.</p>
       </div>
       <% } else { %>
       <img src="<%= food.image.url %>" alt="<%= food.name %>" class="max-w-full h-auto max-h-[400px] object-contain shadow-sm">
       <% } %>
       <% } else { %>
-      <div class="w-full py-20 flex flex-col items-center justify-center text-gray-400">
+      <div class="w-full py-16 flex flex-col items-center justify-center text-gray-400">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
-        <p>등록된 사진이 없습니다.</p>
+        <p class="text-base">등록된 사진이 없습니다.</p>
       </div>
       <% } %>
     </div>
-    <div class="space-y-2 mb-6">
+    <div class="space-y-3 mb-6 text-base">
       <p class="text-gray-700">
-        <span class="font-semibold">설명</span> : <%= food.description %>
+        <span class="font-bold">설명</span>: <%= food.description %>
       </p>
       <p class="text-gray-700">
-        <span class="font-semibold">유통기한</span> : <%= food.expiryAt ? food.expiryAt.toISOString().split('T')[0] : '' %>
+        <span class="font-bold">유통기한</span>: <%= food.expiryAt ? food.expiryAt.toISOString().split('T')[0] : '' %>
       </p>
       <p class="text-gray-700">
-        <span class="font-semibold">그룹</span> : <%= groupName %>
+        <span class="font-bold">그룹</span>: <%= groupName %>
       </p>
       <p class="text-gray-700">
-        <span class="font-semibold">유저</span> : <%= foodAuthor %>
+        <span class="font-bold">유저</span>: <%= foodAuthor %>
       </p>
     </div>
     <hr class="mb-6" />
-    <div class="flex gap-2">
+    <div class="flex gap-3">
       <% if (isOwner) { %>
-      <form action="/foods/<%= food._id %>/edit" method="GET" class="w-full">
-        <button type="submit" class="w-full px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-semibold transition">
+      <form action="/foods/<%= food._id %>/edit" method="GET" class="flex-1">
+        <button type="submit" class="w-full px-6 py-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold transition text-base">
           수정
         </button>
       </form>
-      <form id="delete-form" action="/foods/<%= food._id %>/?_method=DELETE" method="POST" class="w-full" onsubmit="return confirm('정말 삭제하시겠습니까?')">
-        <button type="submit" class="w-full px-4 py-2 rounded bg-red-500 hover:bg-red-600 text-white font-semibold transition">
+      <form id="delete-form" action="/foods/<%= food._id %>/?_method=DELETE" method="POST" class="flex-1" onsubmit="return confirm('정말 삭제하시겠습니까?')">
+        <button type="submit" class="w-full px-6 py-3 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition text-base">
           삭제
         </button>
       </form>
       <% } else { %>
       <form id="eat-first" action="/foods/<%= food._id %>/eat?_method=PUT" method="POST" class="w-full" onsubmit="return confirm('그룹원의 음식을 먹으시겠습니까?')">
-        <button type="submit" class="w-full px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-semibold transition">
+        <button type="submit" class="w-full px-6 py-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold transition text-base">
           내가 먹을게요
         </button>
       </form>

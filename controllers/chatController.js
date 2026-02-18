@@ -1,6 +1,7 @@
 const ChatRoom = require("../models/chatRoomModel.js");
 const Chat = require("../models/chatModel.js");
 const Donation = require("../models/donationModel.js");
+const { FOOD_STATUS } = require("../models/foodModel.js");
 
 // create chat chatRoom
 const createChatRoom = async (donationId, userId) => {
@@ -67,7 +68,7 @@ const closeChatRoom = async (donationId, chatRoomId) => {
   await chatRoom.save();
 
   donation.food.group = null;
-  donation.food.isDonated = true;
+  donation.food.status = FOOD_STATUS.DONATED;
   await donation.food.save();
   await donation.save();
 };

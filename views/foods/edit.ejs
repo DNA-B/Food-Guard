@@ -1,27 +1,27 @@
-<div class="flex flex-col items-center min-h-[60vh] py-8">
-  <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-xl">
-    <h1 class="text-3xl font-bold text-indigo-700 mb-8">음식 수정</h1>
-    <form action="/foods/<%= food._id %>/edit/?_method=PUT" method="POST" enctype="multipart/form-data" class="space-y-4">
+<div class="flex flex-col items-center min-h-[60vh] py-10 w-full">
+  <div class="bg-gradient-to-br from-green-50 to-emerald-100 shadow-lg rounded-2xl p-10 w-full max-w-2xl border border-green-200">
+    <h1 class="text-3xl font-bold text-green-700 mb-8">음식 수정</h1>
+    <form action="/foods/<%= food._id %>/edit/?_method=PUT" method="POST" enctype="multipart/form-data" class="space-y-6">
       <div>
-        <label for="name" class="block text-gray-700 font-medium mb-2">이름</label>
-        <input type="text" id="name" name="name" value="<%= food.name %>" required class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg" />
+        <label for="name" class="block text-gray-700 font-semibold mb-2 text-base">이름</label>
+        <input type="text" id="name" name="name" value="<%= food.name %>" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base" />
       </div>
       <div>
-        <label for="type" class="block text-gray-700 font-medium mb-2">종류</label>
-        <input type="text" id="type" name="type" value="<%= food.type %>" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg" />
+        <label for="type" class="block text-gray-700 font-semibold mb-2 text-base">종류</label>
+        <input type="text" id="type" name="type" value="<%= food.type %>" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base" />
       </div>
       <div>
-        <label for="description" class="block text-gray-700 font-medium mb-2">설명</label>
-        <textarea id="description" name="description" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg"><%= food.description %></textarea>
+        <label for="description" class="block text-gray-700 font-semibold mb-2 text-base">설명</label>
+        <textarea id="description" name="description" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base"><%= food.description %></textarea>
       </div>
       <div>
-        <label for="expiryAt" class="block text-gray-700 font-medium mb-2">유통기한</label>
-        <input type="date" id="expiryAt" name="expiryAt" value="<%= food.expiryAt ? food.expiryAt.toISOString().split('T')[0] : '' %>" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg" />
+        <label for="expiryAt" class="block text-gray-700 font-semibold mb-2 text-base">유통기한</label>
+        <input type="date" id="expiryAt" name="expiryAt" value="<%= food.expiryAt ? food.expiryAt.toISOString().split('T')[0] : '' %>" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base" />
       </div>
       <div>
-        <label for="groupId" class="block text-gray-700 font-medium mb-2">그룹 선택</label>
-        <select id="groupId" name="groupId" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg">
-          <option value="<%= food.group === null ? 'nothing' : food.group.name %>" selected hidden><%= food.group === null ? '그룹을 선택해주세요.' : food.group.name %></option>
+        <label for="groupId" class="block text-gray-700 font-semibold mb-2 text-base">그룹 선택</label>
+        <select id="groupId" name="groupId" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base">
+          <option value="<%= food.group === null ? 'nothing' : food.group %>" selected hidden><%= food.group === null ? '그룹을 선택해주세요.' : food.group.name %></option>
           <% if (Array.isArray(groups) !== 'undefined' && groups.length > 0) { %>
           <% groups.forEach(function(group) { %>
           <option value="<%= group._id %>" <%= (typeof groupId !== 'undefined' && groupId === group._id.toString()) ? 'selected' : '' %>><%= group.name %>
@@ -31,22 +31,22 @@
         </select>
       </div>
       <div>
-        <label for="image" class="block text-gray-700 font-medium mb-2">사진 업로드</label>
-        <div class="mb-2">
+        <label for="image" class="block text-gray-700 font-semibold mb-3 text-lg">사진 업로드</label>
+        <div class="mb-4">
           <% if (food.image.url && food.image.filename) { %>
-          <img id="preview" src="<%= food.image.url %>" alt="이미지 미리보기" class="max-h-48 rounded" />
+          <img id="preview" src="<%= food.image.url %>" alt="이미지 미리보기" class="max-h-64 rounded-lg" />
           <% } else { %>
-          <img id="preview" src="" alt="이미지 미리보기" style="display:none" class="max-h-48 rounded" />
+          <img id="preview" src="" alt="이미지 미리보기" style="display:none" class="max-h-64 rounded-lg" />
           <% } %>
         </div>
-        <input type="file" id="image" name="image" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <p id="upload-alert" class="text-sm text-gray-500 mt-1">이미지 파일만 업로드 가능합니다.</p>
+        <input type="file" id="image" name="image" accept="image/*" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-lg" />
+        <p id="upload-alert" class="text-base text-gray-500 mt-2">이미지 파일만 업로드 가능합니다.</p>
       </div>
-      <div class="flex gap-2 mt-6">
-        <button type="submit" class="w-full px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 font-semibold transition">
+      <div class="flex gap-6 mt-10">
+        <button type="submit" class="flex-1 px-6 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 font-semibold transition text-lg">
           수정하기
         </button>
-        <button type="button" onclick="history.back()" class="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-semibold transition">
+        <button type="button" onclick="history.back()" class="flex-1 px-6 py-4 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold transition text-lg">
           취소하기
         </button>
       </div>

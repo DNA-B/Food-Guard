@@ -1,13 +1,13 @@
-<div class="flex flex-col items-center min-h-[60vh] py-8">
-  <h1 class="text-3xl font-bold text-indigo-700 mb-8">그룹 목록</h1>
+<div class="flex flex-col items-center min-h-[60vh] py-10 w-full">
+  <h1 class="text-3xl font-bold text-indigo-700 mb-10">그룹 목록</h1>
 
   <!-- 그룹 목록 카드 -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl mb-16">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-7xl mb-10">
     <% groups.forEach(group => { %>
-    <div class="bg-white shadow-lg rounded-xl p-8 flex flex-col gap-4 hover:shadow-xl transition-shadow">
-      <span class="text-xl font-semibold text-gray-800"><%= group.name %></span>
-      <span class="text-gray-500"><%= group.description.substr(0, 10) %></span>
-      <a href=" /groups/<%= group._id %>" class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold transition self-start">
+    <div class="bg-gradient-to-br from-blue-50 to-cyan-100 shadow-lg rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 border border-blue-200">
+      <span class="text-lg font-semibold text-gray-800 line-clamp-2 block"><%= group.name %></span>
+      <span class="text-gray-600 text-sm mt-2 line-clamp-2 block"><%= group.description.substr(0, 20) %></span>
+      <a href="/groups/<%= group._id %>" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-semibold transition text-sm inline-block">
         상세보기
       </a>
     </div>
@@ -16,10 +16,10 @@
 
   <!-- 그룹 생성 + 초대 확인 버튼 -->
   <div class="flex gap-6">
-    <a href="/groups/create" class="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition shadow-md hover:shadow-lg">
+    <a href="/groups/create" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition text-base">
       그룹 생성
     </a>
-    <a href="/groups/invites" class="px-8 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-semibold transition shadow-md hover:shadow-lg">
+    <a href="/groups/invites" class="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 font-semibold transition text-base">
       초대 확인
     </a>
   </div>
@@ -31,7 +31,7 @@
       document.querySelector('a[href="/groups/invites"]').classList.add('relative');
       const inviteButton = document.querySelector('a[href="/groups/invites"]');
       const badge = document.createElement('span');
-      badge.className = 'absolute top-1 right-1 inline-block w-5 h-5 bg-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center transform translate-x-1/2 -translate-y-1/2';
+      badge.className = 'absolute top-1 right-1 inline-block w-6 h-6 bg-red-600 text-white text-sm font-bold rounded-full flex items-center justify-center transform translate-x-1/2 -translate-y-1/2';
       inviteButton.appendChild(badge);
     </script>
     <% } %>

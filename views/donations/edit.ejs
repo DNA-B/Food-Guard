@@ -1,19 +1,19 @@
-<div class="flex flex-col items-center min-h-[60vh] py-8">
-  <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-xl">
-    <h1 class="text-3xl font-bold text-indigo-700 mb-8">나눔 수정</h1>
-    <form action="/donations/<%= donation._id %>/edit/?_method=PUT" method="POST" class="space-y-4">
+<div class="flex flex-col items-center min-h-[60vh] py-10 w-full">
+  <div class="bg-gradient-to-br from-orange-50 to-red-100 shadow-lg rounded-2xl p-10 w-full max-w-2xl border border-orange-200">
+    <h1 class="text-3xl font-bold text-orange-700 mb-8">나눔 수정</h1>
+    <form action="/donations/<%= donation._id %>/edit/?_method=PUT" method="POST" class="space-y-6">
       <div>
-        <label for="title" class="block text-gray-700 font-medium mb-1">제목</label>
-        <input type="text" id="title" name="title" value="<%= donation.title %>" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+        <label for="title" class="block text-gray-700 font-semibold mb-2 text-base">제목</label>
+        <input type="text" id="title" name="title" value="<%= donation.title %>" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 text-base" />
       </div>
       <div>
-        <label for="content" class="block text-gray-700 font-medium mb-1">내용</label>
-        <textarea id="content" name="content" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400">
+        <label for="content" class="block text-gray-700 font-semibold mb-2 text-base">내용</label>
+        <textarea id="content" name="content" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 text-base">
 <%= donation.content %></textarea>
       </div>
       <div>
-        <label for="foodId" class="block text-gray-700 font-medium mb-2">음식 선택</label>
-        <select id="foodId" name="foodId" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-lg">
+        <label for="foodId" class="block text-gray-700 font-semibold mb-2 text-base">음식 선택</label>
+        <select id="foodId" name="foodId" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 text-base">
           <option value="<%= donation.food === null ? 'nothing' : donation.food.name %>" selected hidden><%= donation.food === null ? '음식을 선택해주세요.' : donation.food.name %></option>
           <% if (Array.isArray(foods) !== 'undefined' && foods.length > 0) { %>
           <% foods.forEach(function(food) { %>
@@ -24,11 +24,11 @@
           <% } %>
         </select>
       </div>
-      <div class="flex gap-2 mt-6">
-        <button type="submit" class="w-full px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 font-semibold transition">
+      <div class="flex gap-4 mt-8">
+        <button type="submit" class="flex-1 px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-500 font-semibold transition text-base">
           수정하기
         </button>
-        <button type="button" onclick="history.back()" class="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-semibold transition">
+        <button type="button" onclick="history.back()" class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold transition text-base">
           취소하기
         </button>
       </div>

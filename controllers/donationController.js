@@ -1,4 +1,5 @@
 const Donation = require("../models/donationModel");
+const { Food, FOOD_STATUS } = require("../models/foodModel");
 
 const createDonation = async (title, content, foodId, userId) => {
   if (!title || !foodId) {
@@ -7,9 +8,19 @@ const createDonation = async (title, content, foodId, userId) => {
     throw error;
   }
 
+  const food = await Food.findById(foodId);
+  if (!food) {
+    const error = new Error("해당 음식을 찾을 수 없습니다.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  food.status = FOOD_STATUS.DONATED;
+  await food.save();
+
   const newDonation = new Donation({
-    title: title,
-    content: content,
+    title,
+    content,
     author: userId,
     food: foodId,
   });
@@ -18,8 +29,8 @@ const createDonation = async (title, content, foodId, userId) => {
 };
 
 const findAllDonation = async () => {
-  const donations = (await Donation.find().populate("food", "isDonated")).filter(
-    (donation) => donation.food.isDonated === false,
+  const donations = (await Donation.find().populate("food", "status")).filter(
+    (donation) => donation.food.status === "donated",
   );
 
   if (!donations) {

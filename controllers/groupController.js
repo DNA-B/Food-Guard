@@ -1,6 +1,6 @@
 const Group = require("../models/groupModel");
 const { Invite, INVITE_STATUS } = require("../models/inviteModel");
-const { Food, FOOD_STATUS } = require("../models/foodModel");
+const { Food } = require("../models/foodModel");
 
 const existPendingInvitesByUserId = async (userId) => {
   const exists = await Invite.exists({

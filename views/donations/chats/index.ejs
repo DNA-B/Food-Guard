@@ -1,36 +1,36 @@
-<div class="flex flex-col items-center min-h-[60vh] py-8 px-4">
-  <h1 class="text-3xl font-bold text-indigo-700 mb-8">내 채팅 목록</h1>
+<div class="flex flex-col items-center min-h-[60vh] py-10 w-full px-8 lg:px-12">
+  <h1 class="text-3xl font-bold text-orange-700 mb-10">내 채팅 목록</h1>
 
   <div class="w-full max-w-4xl space-y-4">
     <% chatRooms.filter(chatRoom => !chatRoom.isClosed).forEach(chatRoom => { %>
-    <div class="bg-white shadow rounded-lg p-6 flex items-center justify-between border border-gray-100 hover:border-indigo-300 transition-colors">
-      <div class="flex flex-col gap-1">
-        <div class="flex items-center gap-2">
-          <span class="text-lg font-bold text-gray-800">
+    <div class="bg-gradient-to-br from-orange-50 to-red-100 shadow-lg rounded-2xl p-6 flex items-center justify-between border border-orange-200 hover:border-orange-400 hover:scale-102 transition-all">
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-3">
+          <span class="text-lg font-bold text-orange-800">
             <%= chatRoom.donation.title %>
           </span>
         </div>
 
-        <p class="text-sm text-gray-600">
+        <p class="text-sm text-orange-700">
           <% const partner = chatRoom.users.find(u => u._id.toString() !== userId.toString()); %>
           대화 상대: <%= partner.nickname %>
         </p>
 
-        <span class="text-[11px] text-gray-400 mt-1">
+        <span class="text-xs text-orange-600 mt-2">
           최근 활동: <%= new Date(chatRoom.updatedAt).toLocaleString() %>
         </span>
       </div>
 
-      <a href="/donations/<%= chatRoom.donation._id %>/chats/<%= chatRoom._id %>" class="px-5 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-semibold transition shadow-sm">
+      <a href="/donations/<%= chatRoom.donation._id %>/chats/<%= chatRoom._id %>" class="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold transition shadow-md text-base whitespace-nowrap">
         입장하기
       </a>
     </div>
     <% }); %>
   </div>
 
-  <div class="mt-8">
-    <a href="/donations" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <div class="mt-10">
+    <a href="/donations" class="text-orange-600 hover:text-orange-800 font-semibold flex items-center gap-2 text-base">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
       </svg>
       나눔 목록으로 돌아가기
