@@ -152,30 +152,34 @@
   <b><i>공사중
     <div>
       <h3>메인페이지 ~ 로그인/로그아웃</h3>
-        <img src="">
+        <img src="public/videos/메인-로그인_로그아웃.gif">
     </div>
     <div>
       <h3>음식</h3>
-        <img src="">
+        <img src="public/videos/음식.gif">
     </div>
     <div>
       <h3>그룹</h3>
       <div>
         <h4>생성/그룹원 목록/그룹 수정</h4>
-          <img src="">
+          <img src="public/videos/그룹(생성_목록_수정).gif">
       </div>
       <div>
         <h4>그룹 초대 수락/그룹 음식 생성/그룹 나가기</h4>
-          <img src="">
+          <img src="public/videos/그룹(초대_음식생성_나가기).gif">
+      </div>
+      <div>
+        <h4>다른 그룹원의 음식 먹기</h4>
+          <img src="public/videos/그룹(내가먹을게요).gif">
       </div>
     </div>
     <div>
       <h3>커뮤니티</h3>
-        <img src="">
+        <img src="public/videos/커뮤니티.gif">
     </div>
     <div>
       <h3>나눔</h3>
-        <img src="">
+        <img src="public/videos/나눔.gif">
     </div>
   </div>
 
